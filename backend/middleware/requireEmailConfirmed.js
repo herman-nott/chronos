@@ -1,5 +1,4 @@
-import User from "../models/User.js";
-import db from "../db.js";
+import User from "../database/models/User.js";
 
 async function requireEmailConfirmed(req, res, next) {
     try {
@@ -9,8 +8,9 @@ async function requireEmailConfirmed(req, res, next) {
             return res.status(400).json({ error: "Email or Login is required" });
         }
 
-        const userModel = new User(db);
-        const user = await userModel.findByEmailOrLogin(emailOrLogin);
+        const user = await User.findOne({
+            $or: [{ email: emailOrLogin }, { login: emailOrLogin }]
+        });
 
         if (!user) {
             return res.status(404).json({ error: "User not found" });

@@ -1,17 +1,15 @@
-import User from "../../models/User.js";
-import PasswordReset from "../../models/PasswordReset.js";
+import User from "../../database/models/User.js";
+import PasswordReset from "../../database/models/PasswordReset.js";
 
-async function handlePasswordReset(req, res, db, crypto, nodemailer) {
+async function handlePasswordReset(req, res, crypto, nodemailer) {
     try {
-        const userModel = new User(db);
-
         const { email } = req.body;
         if (!email) {
             return res.status(400).json({ error: 'Email is required' });
         }
 
         // поиск пользователя
-        const user = await userModel.findByEmail(email);
+        const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ error: `Email ${email} does not exist` });
         }
@@ -19,7 +17,7 @@ async function handlePasswordReset(req, res, db, crypto, nodemailer) {
         const genericResponse = { message: `A password reset link has been sent to email ${email}` };
 
         // удалить старые токены 
-        await PasswordReset.deletePasswordResets(db, user.id);
+        await PasswordReset.deleteMany({ user_id: user._id });
 
         // сгенерировать токен и захешировать его
         const confirm_token = crypto.randomBytes(32).toString('hex');
@@ -27,10 +25,15 @@ async function handlePasswordReset(req, res, db, crypto, nodemailer) {
         const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 минут
 
         // сохранить хеш в БД
-        await PasswordReset.createPasswordReset(db, user.id, confirm_token_hash, expiresAt);
+        await PasswordReset.create({
+            user_id: user._id,
+            token_hash: confirm_token_hash,
+            expires_at: expiresAt,
+            used: false
+        });
 
         // формирование ссылки сброса пароля
-        const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000';
+        const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000/api/auth';
         const resetLink = `${FRONTEND_URL}/password-reset/${confirm_token}`;
 
         try {

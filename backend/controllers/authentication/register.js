@@ -1,10 +1,8 @@
-import User from "../../models/User.js";
-import EmailVerification from "../../models/EmailVerification.js";
+import User from "../../database/models/User.js";
+import EmailVerification from "../../database/models/EmailVerification.js";
 
-async function handleRegister(req, res, db, bcrypt, nodemailer) {
+async function handleRegister(req, res, bcrypt, nodemailer) {
     const { login, password, password_confirmation, firstname, lastname, email } = req.body;
-    const userModel = new User(db);
-    const emailVerificationModel = new EmailVerification(db);
 
     try {
         if (password !== password_confirmation) {
@@ -19,12 +17,13 @@ async function handleRegister(req, res, db, bcrypt, nodemailer) {
             return res.status(400).json({ error: "Password must contain at least 6 characters" });
         }
 
-        const existingLoginUser = await userModel.findByLogin(login);
+        const existingLoginUser = await User.findOne({ login });
+        const existingEmailUser = await User.findOne({ email });
+
         if (existingLoginUser && existingLoginUser.is_email_confirmed) {
             return res.status(400).json({ error: "Login is already taken" });
         }
 
-        const existingEmailUser = await userModel.findByEmail(email);
         if (existingEmailUser && existingEmailUser.is_email_confirmed) {
             return res.status(400).json({ error: "Email is already registered" });
         }
@@ -38,37 +37,35 @@ async function handleRegister(req, res, db, bcrypt, nodemailer) {
             
             const userToUpdate = existingLoginUser || existingEmailUser;
 
-            await userModel.update(userToUpdate.id, {
+            userToUpdate.login = login;
+            userToUpdate.password_hash = hash;
+            userToUpdate.full_name = `${firstname} ${lastname}`;
+            userToUpdate.email = email;
+            userToUpdate.updatedAt = new Date();
+
+            newUser = await userToUpdate.save();
+        } else {
+            newUser = await User.create({
                 login,
                 password_hash: hash,
                 full_name: `${firstname} ${lastname}`,
                 email,
-                updated_at: new Date()
-            });
-            newUser = await userModel.findById(existingEmailUser.id);
-        } else {
-            const id = await userModel.create({
-                login: login,
-                password_hash: hash,
-                full_name: `${firstname} ${lastname}`,
-                email: email,
-                profile_picture: 'uploads/avatars/default.png', 
-                rating: 0,
-                role: 'user',
-                created_at: new Date(),
-                updated_at: new Date(),
+                locale: "en-US",
+                timezone: "UTC",
+                calendars: [],
                 is_email_confirmed: false
             });
-
-            newUser = await userModel.findById(id);
         }
-
 
         // сгенерировать 6-значный код и срок действия
         const code = Math.floor(100000 + Math.random() * 900000).toString();
         const expiresAt = new Date(Date.now() + 15 * 60 * 1000);
 
-        await emailVerificationModel.create(newUser.id, code, expiresAt);
+        await EmailVerification.create({
+            user_id: newUser._id,
+            code: code,
+            expires_at: expiresAt
+        });
 
         try {
             const transporter = nodemailer.createTransport({
@@ -100,16 +97,11 @@ async function handleRegister(req, res, db, bcrypt, nodemailer) {
         }
 
         // добавить сессию
-        req.session.userId = newUser.id;
+        req.session.userId = newUser._id;
         req.session.user = {
-            id: newUser.id,
-            role: newUser.role,
+            id: newUser._id,
             login: newUser.login
         };
-
-        // вернуть пользователя без пароля
-        // const { password_hash, ...safeUser } = newUser;
-        // res.json(safeUser);
 
         res.json({
             message: "Please confirm your email using the 6-digit code sent to you."

@@ -1,10 +1,8 @@
-import User from "../../models/User.js";
-import PasswordReset from "../../models/PasswordReset.js";
+import User from "../../database/models/User.js";
+import PasswordReset from "../../database/models/PasswordReset.js";
 
-async function handlePasswordResetConfirm(req, res, db, bcrypt, crypto) {
+async function handlePasswordResetConfirm(req, res, bcrypt, crypto) {
     try {
-        const userModel = new User(db);
-
         const { confirm_token } = req.params;
         const { new_password } = req.body;
         const { new_password_confirmation } = req.body;
@@ -23,7 +21,7 @@ async function handlePasswordResetConfirm(req, res, db, bcrypt, crypto) {
 
         // поиск токена
         const tokenHash = crypto.createHash('sha256').update(confirm_token).digest('hex');
-        const resetToken = await PasswordReset.findResetToken(db, tokenHash);
+        const resetToken = await PasswordReset.findOne({ token_hash: tokenHash });
 
         // проверить наличие, скрок действия и использование токена
         if (!resetToken) {
@@ -39,7 +37,7 @@ async function handlePasswordResetConfirm(req, res, db, bcrypt, crypto) {
         }
 
         // получить пользователя
-        const user = await userModel.findById(resetToken.user_id);
+        const user = await User.findById(resetToken.user_id);
         if (!user) {
             return res.status(400).json({ error: "User not found" });
         }
@@ -47,10 +45,12 @@ async function handlePasswordResetConfirm(req, res, db, bcrypt, crypto) {
         const hashedNewPassword = await bcrypt.hash(new_password, 10);
 
         // обновить пароль
-        await userModel.updatePassword(user.id, hashedNewPassword);
+        user.password_hash = hashedNewPassword;
+        await user.save();
 
         // поменять у токена used на true
-        await PasswordReset.markResetTokenUsed(db, resetToken.id);
+        resetToken.used = true;
+        await resetToken.save();
 
         return res.json({ message: "Password has been reset successfully" });        
     } catch (error) {

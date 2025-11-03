@@ -1,15 +1,16 @@
-import User from "../../models/User.js";
+import User from "../../database/models/User.js";
 
-async function handleLogin(req, res, db, bcrypt) {
+async function handleLogin(req, res, bcrypt) {
     const { emailOrLogin, password } = req.body;
-    const userModel = new User(db);
 
     if (!emailOrLogin || !password) {
         return res.status(400).json('Incorrect form submission');
     }
 
     try {
-        const user = await userModel.findByEmailOrLogin(emailOrLogin);
+        const user = await User.findOne({
+            $or: [{ email: emailOrLogin }, { login: emailOrLogin }]
+        });
 
         if (!user) {
             return res.status(400).json('Wrong credentials');
@@ -23,12 +24,11 @@ async function handleLogin(req, res, db, bcrypt) {
         // добавить сессию
         req.session.user = {
             id: user.id,
-            role: user.role,
             login: user.login
         };
 
         // вернуть пользователя без пароля
-        const { password_hash, ...safeUser } = user;
+        const { password_hash, ...safeUser } = user.toObject();
         res.json(safeUser);
 
     } catch (error) {
