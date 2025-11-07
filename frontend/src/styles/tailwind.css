@@ -1,0 +1,197 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Primary Colors */
+    --primary-background: #9e97f6;
+    --primary-foreground: #ffffff;
+    --primary-light: #e4ceff;
+    --primary-dark: #eaddff;
+
+    /* Secondary Colors */
+    --secondary-background: #ffffff;
+    --secondary-foreground: #18181b;
+    --secondary-light: #fafafa;
+    --secondary-dark: #f4f4f5;
+
+    /* Text Colors */
+    --text-primary: #000000;
+    --text-secondary: #18181b;
+    --text-muted: #71717a;
+    --text-disabled: #a1a1aa;
+    --text-light: #f2f2f2;
+    --text-white: #ffffff;
+
+    /* Background Colors */
+    --bg-main: #fafafa;
+    --bg-card: #ffffff;
+    --bg-accent: #9e97f6;
+    --bg-secondary: #f4f4f5;
+    --bg-light: #e4ceff;
+    --bg-lighter: #eaddff;
+
+    /* Border Colors */
+    --border-primary: #ffffff;
+
+    /* Typography Variables */
+    --font-size-xs: 10px;
+    --font-size-sm: 12px;
+    --font-size-base: 14px;
+    --font-size-md: 16px;
+    --font-size-lg: 20px;
+    --font-size-xl: 22px;
+
+    /* Font Weight Variables */
+    --font-weight-normal: 400;
+    --font-weight-medium: 500;
+    --font-weight-bold: 700;
+
+    /* Line Height Variables */
+    --line-height-xs: 13px;
+    --line-height-sm: 15px;
+    --line-height-base: 16px;
+    --line-height-md: 17px;
+    --line-height-lg: 19px;
+    --line-height-xl: 24px;
+    --line-height-2xl: 25px;
+    --line-height-3xl: 27px;
+    --line-height-4xl: 30px;
+
+    /* Spacing Variables - Margin */
+    --margin-xs: 4px;
+    --margin-sm: 6px;
+    --margin-base: 8px;
+    --margin-md: 10px;
+    --margin-lg: 12px;
+    --margin-xl: 14px;
+    --margin-2xl: 16px;
+    --margin-3xl: 18px;
+    --margin-4xl: 20px;
+    --margin-5xl: 26px;
+    --margin-6xl: 30px;
+    --margin-7xl: 34px;
+    --margin-8xl: 36px;
+    --margin-9xl: 40px;
+    --margin-10xl: 90px;
+    --margin-11xl: 124px;
+    --margin-12xl: 138px;
+    --margin-13xl: 144px;
+
+    /* Spacing Variables - Padding */
+    --padding-xs: 4px;
+    --padding-sm: 6px;
+    --padding-base: 8px;
+    --padding-md: 12px;
+    --padding-lg: 14px;
+    --padding-xl: 16px;
+    --padding-2xl: 32px;
+    --padding-3xl: 56px;
+
+    /* Spacing Variables - Gap */
+    --gap-sm: 6px;
+    --gap-base: 8px;
+    --gap-md: 14px;
+    --gap-lg: 16px;
+    --gap-xl: 24px;
+    --gap-2xl: 26px;
+    --gap-3xl: 28px;
+    --gap-4xl: 584px;
+
+    /* Border Radius Variables */
+    --radius-none: 0px;
+    --radius-xs: 2px;
+    --radius-sm: 4px;
+    --radius-base: 5px;
+    --radius-md: 6px;
+    --radius-lg: 8px;
+    --radius-xl: 24px;
+
+    /* Border Width Variables */
+    --border-width: 1px;
+
+    /* Layout Variables - Width */
+    --width-full: 100%;
+    --width-auto: auto;
+    --width-flex: flex-1;
+    --width-xs: 4px;
+    --width-sm: 12%;
+    --width-base: 18%;
+    --width-md: 18px;
+    --width-lg: 22%;
+    --width-xl: 24px;
+    --width-2xl: 30%;
+    --width-3xl: 72%;
+    --width-4xl: 80%;
+    --width-5xl: 86%;
+    --width-6xl: 88%;
+
+    /* Layout Variables - Height */
+    --height-auto: auto;
+    --height-flex: flex-1;
+
+    /* Component Specific - Header */
+    --header-width: var(--width-full);
+
+    /* Component Specific - List */
+    --list-margin: var(--margin-9xl);
+    --list-gap: var(--gap-base);
+    --list-width: var(--width-flex);
+
+    /* Component Specific - CheckBox */
+    --checkbox-text-color: var(--text-white);
+    --checkbox-font-size: var(--font-size-lg);
+    --checkbox-font-weight: var(--font-weight-normal);
+    --checkbox-line-height: var(--line-height-2xl);
+    --checkbox-margin: var(--margin-base);
+    --checkbox-padding: var(--padding-sm);
+    --checkbox-gap: var(--gap-lg);
+    --checkbox-width: var(--width-auto);
+
+    /* Component Specific - Link */
+    --link-text-color: var(--text-white);
+    --link-font-size: var(--font-size-lg);
+    --link-font-weight: var(--font-weight-normal);
+    --link-line-height: var(--line-height-2xl);
+    --link-margin: var(--margin-xl);
+    --link-width: var(--width-auto);
+
+    /* Component Specific - IconButton */
+    --iconbutton-bg: var(--bg-secondary);
+    --iconbutton-padding: var(--padding-xs);
+    --iconbutton-radius-sm: var(--radius-none);
+    --iconbutton-radius-md: var(--radius-md);
+    --iconbutton-width: var(--width-auto);
+
+    /* Component Specific - Button */
+    --button-text-primary: var(--text-secondary);
+    --button-text-secondary: var(--text-white);
+    --button-bg-primary: var(--bg-accent);
+    --button-bg-secondary: var(--bg-secondary);
+    --button-font-size-sm: var(--font-size-sm);
+    --button-font-size-base: var(--font-size-base);
+    --button-font-weight-normal: var(--font-weight-normal);
+    --button-font-weight-medium: var(--font-weight-medium);
+    --button-line-height-sm: var(--line-height-sm);
+    --button-line-height-md: var(--line-height-md);
+    --button-padding-sm: var(--padding-xs);
+    --button-padding-md: var(--padding-sm);
+    --button-padding-lg: var(--padding-xl);
+    --button-radius: var(--radius-lg);
+    --button-width: var(--width-auto);
+
+    /* Component Specific - SearchView */
+    --search-text-color: var(--text-disabled);
+    --search-bg: var(--bg-secondary);
+    --search-font-size: var(--font-size-sm);
+    --search-font-weight: var(--font-weight-normal);
+    --search-line-height: var(--line-height-sm);
+    --search-padding-sm: var(--padding-xs);
+    --search-padding-md: var(--padding-md);
+    --search-padding-lg: var(--padding-2xl);
+    --search-gap: var(--gap-base);
+    --search-radius: var(--radius-sm);
+    --search-width: var(--width-base);
+  }
+}
