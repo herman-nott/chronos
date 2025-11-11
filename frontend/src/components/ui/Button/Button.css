@@ -1,0 +1,45 @@
+/* Base button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: Inter, sans-serif;
+  font-weight: 500;
+  border-radius: 0.375em;
+  /* default rounded-md */
+  transition: all 0.2s ease;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  background-color: #dbdaec;
+  /* default primary color */
+  color: rgb(6, 1, 74);
+}
+
+/* Hover & focus */
+.btn:hover {
+  opacity: 0.9;
+}
+
+.btn:focus {
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.5);
+  /* focus ring */
+}
+.btn::after{
+  background-color: #605cb0;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Optional: secondary variant example */
+.btn-secondary {
+  background-color: #e5e7eb;
+  color: #1f2937;
+}
+
+.btn-secondary:hover {
+  background-color: #d1d5db;
+}

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
-import "./SmallCalendar.css";
+import "./MonthCalendar.css";
 
-export default function SmallCalendar() {
+export default function MonthView() {
   const today = new Date();
   const [currMonth, setCurrMonth] = useState(today.getMonth());
   const [currYear, setCurrYear] = useState(today.getFullYear());
@@ -71,31 +71,31 @@ export default function SmallCalendar() {
   };
 
   return (
-    <div className="calendar-box">
-      <div className="calendar-inner">
+    <div className="mon-calendar-box">
+      <div className="mon-calendar-inner">
 
         {/* Header */}
-        <div className="calendar-header">
-          <div className="calendar-header-left">
-            <h2 className="calendar-month">
+        <div className="mon-calendar-header">
+          <div className="mon-calendar-header-left">
+            <h2 className="mon-calendar-month">
               {months[currMonth]} {currYear}
             </h2>
           </div>
 
-          <div className="calendar-header-right">
+          <div className="mon-calendar-header-right">
             <i
-              className="fa-solid fa-chevron-left calendar-arrow"
+              className="fa-solid fa-chevron-left mon-calendar-arrow"
               onClick={() => handlePrevNext("prev")}
             ></i>
             <i
-              className="fa-solid fa-chevron-right calendar-arrow"
+              className="fa-solid fa-chevron-right mon-calendar-arrow"
               onClick={() => handlePrevNext("next")}
             ></i>
           </div>
         </div>
 
         {/* Week Labels */}
-        <ul className="weeks">
+        <ul className="mon-weeks">
           <li>Sun</li>
           <li>Mon</li>
           <li>Tue</li>
@@ -106,7 +106,7 @@ export default function SmallCalendar() {
         </ul>
 
         {/* Days */}
-        <ul className="days">
+        <ul className="mon-days">
           {days.map((dayObj, index) => (
             <li key={index} className={dayObj.className}>
               {dayObj.day}
