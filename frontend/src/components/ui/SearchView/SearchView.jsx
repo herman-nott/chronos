@@ -1,82 +1,27 @@
-import React from 'react';
-import { cva } from 'class-variance-authority';
-import { twMerge } from 'tailwind-merge';
-
-const searchClasses = cva(
-  'flex items-center transition-all duration-200 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500',
-  {
-    variants: {
-      size: {
-        small: 'text-sm px-2 py-1',
-        medium: 'text-base px-3 py-2',
-        large: 'text-lg px-4 py-3',
-      },
-    },
-    defaultVariants: {
-      size: 'medium',
-    },
-  }
-);
+import React from "react";
+import "./SearchView.css"; // optional CSS for colors if needed
 
 const SearchView = ({
-  // Required parameters with defaults
   placeholder = "Search",
-  text_font_size = "text-sm",
-  text_font_family = "Inter",
-  text_font_weight = "font-normal",
-  text_line_height = "leading-sm",
-  text_text_align = "left",
-  text_color = "text-text-disabled",
-  fill_background_color = "bg-secondary-dark",
-  border_border_radius = "rounded-sm",
-  
-  // Optional parameters (no defaults)
-  layout_gap,
-  layout_width,
-  padding,
-  position,
-  
-  // Standard React props
   value,
   onChange,
   onFocus,
   onBlur,
   disabled = false,
-  className,
-  size,
+  size = "medium", // small, medium, large
+  className = "",
   ...props
 }) => {
-  // Safe validation for optional parameters
-  const hasValidGap = layout_gap && typeof layout_gap === 'string' && layout_gap?.trim() !== '';
-  const hasValidWidth = layout_width && typeof layout_width === 'string' && layout_width?.trim() !== '';
-  const hasValidPadding = padding && typeof padding === 'string' && padding?.trim() !== '';
-  const hasValidPosition = position && typeof position === 'string' && position?.trim() !== '';
-
-  // Build optional Tailwind classes
-  const optionalClasses = [
-    hasValidGap ? `gap-[${layout_gap}]` : '',
-    hasValidWidth ? `w-[${layout_width}]` : 'w-full',
-    hasValidPadding ? `p-[${padding}]` : '',
-    hasValidPosition ? position : '',
-  ]?.filter(Boolean)?.join(' ');
-
-  // Build required style classes
-  const requiredClasses = [
-    text_font_size || "text-sm",
-    text_font_weight || "font-normal",
-    text_line_height || "leading-sm",
-    fill_background_color || "bg-secondary-dark",
-    border_border_radius || "rounded-sm",
-  ]?.filter(Boolean)?.join(' ');
+  // size mapping
+  const sizeClasses = {
+    small: "text-sm px-2 py-1",
+    medium: "text-base px-3 py-2",
+    large: "text-lg px-4 py-3",
+  };
 
   return (
     <div
-      className={twMerge(
-        searchClasses({ size }),
-        requiredClasses,
-        optionalClasses,
-        className
-      )}
+      className={`search-view flex items-center bg-gray-700 rounded ${sizeClasses[size] || sizeClasses.medium} ${className}`}
     >
       <svg
         className="w-4 h-4 mr-2 text-gray-400"
@@ -100,15 +45,7 @@ const SearchView = ({
         onFocus={onFocus}
         onBlur={onBlur}
         disabled={disabled}
-        style={{ 
-          fontFamily: text_font_family || 'Inter',
-          textAlign: text_text_align || 'left'
-        }}
-        className={twMerge(
-          'flex-1 bg-transparent border-none outline-none',
-          text_color || "text-text-disabled",
-          'placeholder:' + (text_color || "text-text-disabled")
-        )}
+        className="flex-1 bg-transparent border-none outline-none text-white placeholder-gray-400"
         {...props}
       />
     </div>

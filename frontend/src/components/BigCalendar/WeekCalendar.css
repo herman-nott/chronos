@@ -1,0 +1,57 @@
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  margin-bottom: 4em;
+}
+
+/* Calendar Grid */
+.calendar-grid {
+  padding: 1rem 0;
+  overflow-x: auto;
+}
+
+.time-row {
+  display: flex;
+  align-items: start;
+  margin-bottom: 0.1em;
+}
+
+.time-label {
+  min-width: 48px;
+  text-align: left;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* Time Blocks */
+.time-blocks {
+  display: flex;
+  flex: 1;
+  max-width: 1012px;
+  margin-left: 1rem;
+}
+
+.calendar-cell {
+  flex: 1;
+  min-height: 72px;
+  border: 1px solid var(--border-color);
+  background-color: #f9fafb;
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.calendar-cell:hover {
+  background-color: #f3f4f6;
+}
+
+.calendar-cell.selected {
+  background-color: #6b6fc4;
+}
+
+@media (min-width: 1024px) {
+  .calendar-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+}
