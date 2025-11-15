@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import './WeekCalendar.css'
 
-export default function WeekView({ onDateChange,  currentDate }) {
+export default function WeekView({ onDateChange, currentDate }) {
   useEffect(() => {
     onDateChange({
       year:  currentDate.getFullYear(),
       month:  currentDate.getMonth(),
       day: '',
     });
-  }, [ currentDate]);
+  }, [ currentDate ]);
 
   const [selectedCells, setSelectedCells] = useState(new Set());
 
@@ -54,7 +54,7 @@ export default function WeekView({ onDateChange,  currentDate }) {
     <>
       <div className="calendar-container">
         <div className="calendar-grid">
-           <ul className="mon-weeks decoration-none">
+           <ul className="weeks">
           <li>Sun</li>
           <li>Mon</li>
           <li>Tue</li>
