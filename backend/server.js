@@ -7,8 +7,15 @@ import crypto from "crypto";
 import nodemailer from "nodemailer";
 import cors from "cors";
 
-// .env
-import 'dotenv/config';
+// .env -- load from parent directory
+import { config } from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+config({ path: join(__dirname, '../.env') });
 
 // database
 import connectDB from "./database/connection.js";
@@ -75,7 +82,6 @@ async function start() {
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
     app.patch('/api/events/:id', requireAuth, (req, res) => { handleUpdateEvent(req, res) });
-
 
     // === DELETE Requests ===
     app.delete('/api/calendars/:id', requireAuth, (req, res) => { handleDeleteCalendar(req, res) });

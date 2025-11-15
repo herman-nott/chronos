@@ -2,13 +2,13 @@ import mongoose from "mongoose";
 
 async function connectDB() {
     try {
-        await mongoose.connect("mongodb://localhost:27017/chronos_db", {
-            useNewUrlParser: true,
-            useUnifiedTopology: true,
+        await mongoose.connect(process.env.MONGODB_URI, {
+            // useNewUrlParser: true,
+            // useUnifiedTopology: true,
         });
-        console.log("Connected to MongoDB (local)");
-    } catch (error) {
-        console.error("MongoDB connection error:", err);
+        console.log("MongoDB connected successfully");
+    } catch (error) {  // Changed from 'err' to 'error'
+        console.error("MongoDB connection error:", error);
         process.exit(1);
     }
 }
