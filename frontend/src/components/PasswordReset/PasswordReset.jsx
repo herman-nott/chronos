@@ -18,7 +18,7 @@ function PasswordReset({ token }) {
         setError('');
         setMessage('');
 
-        fetch(`${import.meta.env.VITE_API_URL}/auth/password-reset/${token}`, {
+        fetch(`${import.meta.env.VITE_API_URL}/api/auth/password-reset/${token}`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
