@@ -1,35 +1,38 @@
 import React, { useState, useEffect } from "react";
 import "./MonthCalendar.css";
 
-export default function MonthView({ onDateChange,currentDate }) {
+export default function MonthView({ onDateChange, currentDate }) {
+  const [currMonth, setCurrMonth] = useState(currentDate.getMonth());
+  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
+  const [days, setDays] = useState([])
+  
   useEffect(() => {
     onDateChange({
       year:  currentDate.getFullYear(),
       month:  currentDate.getMonth(),
       day: '',
     });
+    setCurrMonth(currentDate.getMonth());
+    setCurrYear(currentDate.getFullYear());
+    setDays(getDays());
   }, [ currentDate ]);
 
-  const [currMonth, setCurrMonth] = useState(currentDate.getMonth());
-  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
-
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+  // const months = [
+  //   "January", "February", "March", "April", "May", "June",
+  //   "July", "August", "September", "October", "November", "December"
+  // ];
 
   // Generate all days dynamically for the current month
   function getDays() {
+    let newDays = [];
     const firstDayOfMonth = new Date(currYear, currMonth, 1).getDay();
     const lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
     const lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay();
     const lastDateOfPrevMonth = new Date(currYear, currMonth, 0).getDate();
 
-    const days = [];
-
     // Previous month’s ending days
     for (let i = firstDayOfMonth; i > 0; i--) {
-      days.push({
+      newDays.push({
         day: lastDateOfPrevMonth - i + 1,
         className: "inactive",
         events: []
@@ -43,7 +46,7 @@ export default function MonthView({ onDateChange,currentDate }) {
         currMonth === currentDate.getMonth() &&
         currYear === currentDate.getFullYear();
 
-      days.push({
+      newDays.push({
         day: i,
         className: isToday ? "active" : "",
         events: [] // You can populate this with real events
@@ -52,17 +55,16 @@ export default function MonthView({ onDateChange,currentDate }) {
 
     // Next month’s starting days
     for (let i = lastDayOfMonth; i < 6; i++) {
-      days.push({
+      newDays.push({
         day: i - lastDayOfMonth + 1,
         className: "inactive",
         events: []
       });
     }
 
-    return days;
+    return newDays;
   }
 
-  const days = getDays();
 
   return (
     <div className="mon-calendar-box">

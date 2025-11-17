@@ -9,6 +9,7 @@ import WeekView from '../BigCalendar/WeekCalendar'
 import DayView from '../BigCalendar/DayCalendar'
 import MonthView from '../BigCalendar/MonthCalendar'
 import YearView from '../BigCalendar/YearCalendar'
+import TodayView from '../BigCalendar/Today';
 
 export default function Calendar() {
   const [view, setSelectedView] = useState('Week');
@@ -23,6 +24,8 @@ export default function Calendar() {
   const renderView = () => {
     const commonProps = { onDateChange: setCurrentInfo, currentDate };
     switch (view) {
+      case "Today":
+        return <TodayView {...commonProps} />;
       case "Day":
         return <DayView {...commonProps} />;
       case "Month":
@@ -35,13 +38,18 @@ export default function Calendar() {
     }
   };
 
+const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+
 const handlePrev = () => {
   switch(view) {
     case 'Day':
       setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 1));
       break;
     case 'Week':
-      setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth(), prev.getDate() - 7));
+      setCurrentDate(prev => new Date(prev.getFullYear(),  prev.getMonth(), prev.getDate() - 7));
       break;
     case 'Month':
       setCurrentDate(prev => new Date(prev.getFullYear(), prev.getMonth() - 1, prev.getDate()));
@@ -83,7 +91,7 @@ const handleDayClick = (day) => {
             <div className="calendar-content">
 
               <div className="calendar-toolbar">
-                  <Button text="Today" onClick={() => {}} />
+                  <Button text="Today" onClick={() => setSelectedView('Day')} className="view-btn" />
                 <div className="toolbar-left">
                   <i className="fa-solid fa-chevron-left calendar-arrow" onClick={() => handlePrev()}></i>
                   <i className="fa-solid fa-chevron-right calendar-arrow" onClick={() => handleNext()}></i>
@@ -91,14 +99,14 @@ const handleDayClick = (day) => {
                 
                 <span>
                   {currentInfo.year && currentInfo.month !== null
-                    ? `${currentInfo.day ? currentInfo.day + " " : ""}${currentInfo.month + 1}/${currentInfo.year}`
+                    ? `${currentInfo.day ? currentInfo.day + " " : ""} ${months[currentInfo.month]} ${currentInfo.year}`
                     : "Loading..."}
                 </span>
                 <div className="toolbar-center">
-                  <Button text="Day" onClick={() => setSelectedView('Day') } />
-                  <Button text="Week" onClick={() => setSelectedView('Week')} />
-                  <Button text="Month" onClick={() => setSelectedView('Month')} />
-                  <Button text="Year" onClick={() => setSelectedView('Year')} />
+                  <Button text="Day" onClick={() => setSelectedView('Day')} className="view-btn" />
+                  <Button text="Week" onClick={() => setSelectedView('Week')} className="view-btn"/>
+                  <Button text="Month" onClick={() => setSelectedView('Month')} className="view-btn"/>
+                  <Button text="Year" onClick={() => setSelectedView('Year')} className="view-btn"/>
                 </div>
 
                 <div className="toolbar-right">

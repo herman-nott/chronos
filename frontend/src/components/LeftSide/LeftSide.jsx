@@ -67,22 +67,29 @@ const LeftSide = () => {
         {/* Header Section */}
         <div className="header mt-5">
           <button className="menu-item mr-4" onClick={() => setNewEventOpen(!newEventOpen)}>
-            <span className="menu-text gap-1">Create event </span>
-            <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
+            <span className="menu-text gap-1">
+              Create event 
+              <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
+            </span>
           </button>
           {newEventOpen && (
-            <ul className='options'>
-              <li onClick={(e) => openPopup("event", e)}>Event</li>
-              <li onClick={(e) => openPopup("task", e)}>Task</li>
-              <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
-            </ul>
+            <div className='options'>
+              <ul>
+                <li onClick={(e) => openPopup("event", e)}>Event</li>
+                <hr></hr>
+                <li onClick={(e) => openPopup("task", e)}>Task</li>
+                <hr></hr>
+                <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
+                <hr></hr>
+              </ul>
+            </div>
           )}
 
           {popup === "event" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
               <NewEvent
                 onClose={() => setPopup(null)}
-                onCreate={(data) => console.log("EVENT CREATED:", data)}
+                // onCreate={(data) => console.log("EVENT CREATED:", data)}
               />
             </Popup>
           )}
@@ -90,7 +97,7 @@ const LeftSide = () => {
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
               <NewTask
                 onClose={() => setPopup(null)}
-                onCreate={(data) => console.log("EVENT CREATED:", data)}
+                // onCreate={(data) => console.log("EVENT CREATED:", data)}
               />
             </Popup>
           )}
@@ -98,13 +105,13 @@ const LeftSide = () => {
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
               <NewAppointment
                 onClose={() => setPopup(null)}
-                onCreate={(data) => console.log("EVENT CREATED:", data)}
+                // onCreate={(data) => console.log("EVENT CREATED:", data)}
               />
             </Popup>
           )}
 
           <button className="menu-item mr-4">
-            <i className="fa-solid fa-gear"></i>
+            <i className="fa-solid fa-gear white"></i>
           </button>
         </div>
 
@@ -113,10 +120,13 @@ const LeftSide = () => {
           {!collapsed && <MiniCalendar />}
         </div>
 
-        <div className="gap-2"
+        <div className="menu-item gap-2"
         onClick={(e) => openPopup("calendar", e)}> 
-          <span className="mr-2">Add Calendar</span>
-          <i className="fa-solid fa-plus transition-transform white"></i>
+          <span className="mr-2 menu-text">
+            Add Calendar
+            <i className="fa-solid fa-plus transition-transform white">
+            </i>
+          </span>
         </div>
 
         {popup === "calendar" && (

@@ -29,12 +29,15 @@
 
 .menu-item {
   /* display: none; */
+  width: fit-content;
   align-items: center;
   justify-content: start;
   background: linear-gradient(to right, rgba(255, 255, 255, 0.3), rgba(229, 231, 235, 0.3));
   border-radius: 0.5rem;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  border: 1px rgb(215, 214, 227) solid;
 }
 
 .menu-text {
@@ -112,11 +115,15 @@
   transform: rotate(180deg);
 }
 .options{
-  background-color: #a58ad8df;
+  background-color: #d5cae985;
+  border-radius: 5px;
+  margin: 0.5em;
+  padding:0;
 }
-li{
-  text-decoration: none;
+.options li{
+  list-style: none;
 }
+
 @media (min-width: 1024px) {
   .left-side {
     width: 25%;

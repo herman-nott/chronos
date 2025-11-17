@@ -27,7 +27,7 @@
 /* Content area */
 .calendar-content {
   flex: 1;
-  margin-left: 1.5rem;
+  /* margin-left: 1.5rem; */
   position: relative;
 }
 
@@ -40,8 +40,6 @@
   gap: 1rem;
   z-index: 8;
   inset: 1rem;
-  border-bottom-right-radius: 6px;
-  border-bottom-left-radius: 6px;
 }
 
 .toolbar-left,
@@ -51,8 +49,10 @@
   align-items: center;
   gap: 0.5rem;
 }
-
-.nav-btn {
+span{
+  color: #71717a;
+}
+/* .nav-btn {
   width: 28px;
   height: 28px;
   background: var(--secondary-dark);
@@ -66,12 +66,14 @@
 .nav-btn img {
   width: 20px;
   height: 20px;
-}
+} */
 
 /* View switcher */
 .view-btn {
   font-size: 14px;
   padding: 4px 16px;
+  width: 3em;
+  height: 1.5em;
   border: none;
   background: transparent;
   color: var(--text-muted);
@@ -80,7 +82,8 @@
 }
 
 .view-btn.active {
-  color: var(--primary-background);
+  color: var(--primary-foreground);
+  background-color: var(--primary-background);
   font-weight: 500;
 }
 
