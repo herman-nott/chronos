@@ -25,6 +25,8 @@ export default function WeekView({ onDateChange, currentDate }) {
     });
   };
 
+  const weekDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+
   const renderTimeBlocks = (timeSlot) => {
     const days = 7;
     const blocks = [];
@@ -40,7 +42,6 @@ export default function WeekView({ onDateChange, currentDate }) {
         />
       );
     }
-
     return <div className="time-blocks">{blocks}</div>;
   };
 
@@ -48,21 +49,31 @@ export default function WeekView({ onDateChange, currentDate }) {
   ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
   '12PM',
   ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
-];
+  ];
 
   return (
     <>
       <div className="calendar-container">
         <div className="calendar-grid">
-           <ul className="weeks">
-          <li>Sun</li>
-          <li>Mon</li>
-          <li>Tue</li>
-          <li>Wed</li>
-          <li>Thu</li>
-          <li>Fri</li>
-          <li>Sat</li>
-        </ul>
+          <div className="time-row">
+          <span className="time-label mr-1"></span> {/* empty top-left corner */}
+            <div className="time-blocks"> 
+              {Array.from({ length: 7 }).map((_, dayIndex) => {
+                const weekIndex = ((currentDate.getDay() + 6) %7 + dayIndex - 1);
+                const date = (currentDate.getDate() + dayIndex -1); 
+                return(
+                  <div key={dayIndex} className='calendar-cell'>
+                    <span className=''>
+                      {weekDays[weekIndex]}
+                    </span>
+                    <span> 
+                      {date}
+                    </span>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
 
           {hrs.map((slot) => (
             <div key={slot} className="time-row">

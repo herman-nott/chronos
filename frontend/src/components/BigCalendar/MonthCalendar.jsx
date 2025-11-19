@@ -1,38 +1,62 @@
 import React, { useState, useEffect } from "react";
 import "./MonthCalendar.css";
 
-export default function MonthView({ onDateChange,currentDate }) {
+export default function MonthView({ onDateChange, currentDate, events = [], onEventClick }) {
+  const [currMonth, setCurrMonth] = useState(currentDate.getMonth());
+  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
+  const [days, setDays] = useState([])
+  
   useEffect(() => {
     onDateChange({
       year:  currentDate.getFullYear(),
       month:  currentDate.getMonth(),
       day: '',
     });
+    setCurrMonth(currentDate.getMonth());
+    setCurrYear(currentDate.getFullYear());
+    setDays(getDays());
   }, [ currentDate ]);
 
-  const [currMonth, setCurrMonth] = useState(currentDate.getMonth());
-  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
+  useEffect(() => {
+      setCurrMonth(currentDate.getMonth());
+      setCurrYear(currentDate.getFullYear());
+    }, [currentDate]);
 
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
+  // const months = [
+  //   "January", "February", "March", "April", "May", "June",
+  //   "July", "August", "September", "October", "November", "December"
+  // ];
+
+  // Get events for a specific day
+  const getEventsForDay = (day, month, year) => {
+    return events.filter(event => {
+      const eventDate = new Date(event.start_time);
+      return (
+        eventDate.getDate() === day &&
+        eventDate.getMonth() === month &&
+        eventDate.getFullYear() === year
+      );
+    });
+  };
 
   // Generate all days dynamically for the current month
   function getDays() {
+    let newDays = [];
     const firstDayOfMonth = new Date(currYear, currMonth, 1).getDay();
     const lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
     const lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay();
     const lastDateOfPrevMonth = new Date(currYear, currMonth, 0).getDate();
 
-    const days = [];
-
     // Previous month’s ending days
     for (let i = firstDayOfMonth; i > 0; i--) {
-      days.push({
+      const day = lastDateOfPrevMonth - i + 1;
+      const prevMonth = currMonth === 0 ? 11 : currMonth - 1;
+      const prevYear = currMonth === 0 ? currYear - 1 : currYear;
+        
+      newDays.push({
         day: lastDateOfPrevMonth - i + 1,
         className: "inactive",
-        events: []
+        events: getEventsForDay(day, prevMonth, prevYear)
       });
     }
 
@@ -43,26 +67,28 @@ export default function MonthView({ onDateChange,currentDate }) {
         currMonth === currentDate.getMonth() &&
         currYear === currentDate.getFullYear();
 
-      days.push({
+      newDays.push({
         day: i,
         className: isToday ? "active" : "",
-        events: [] // You can populate this with real events
+        events: getEventsForDay(i, currMonth, currYear) // You can populate this with real events
       });
     }
 
     // Next month’s starting days
     for (let i = lastDayOfMonth; i < 6; i++) {
-      days.push({
+      const day = i - lastDayOfMonth + 1;
+      const nextMonth = currMonth === 11 ? 0 : currMonth + 1;
+      const nextYear = currMonth === 11 ? currYear + 1 : currYear;
+      
+      newDays.push({
         day: i - lastDayOfMonth + 1,
         className: "inactive",
-        events: []
+        events: getEventsForDay(day, nextMonth, nextYear)
       });
     }
 
-    return days;
+    return newDays;
   }
-
-  const days = getDays();
 
   return (
     <div className="mon-calendar-box">

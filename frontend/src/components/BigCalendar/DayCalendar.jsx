@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 
-export default function DayView({ onDateChange, currentDate }) {
+export default function DayView({ onDateChange, currentDate, today}) {
   const [selectedCells, setSelectedCells] = useState(new Set());
 
+  if (today !== undefined) currentDate = today;
+  
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
       month: currentDate.getMonth(),
-       day: currentDate.getDate(), // week view doesn't have a single day
+      day: currentDate.getDate(), // week view doesn't have a single day
     });
   }, [currentDate]); 
 
@@ -55,12 +57,15 @@ export default function DayView({ onDateChange, currentDate }) {
   ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
   '12PM',
   ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
-];
+  ];
+
+  const weekDays = ['Sun','Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
   
   return (
     <>
       <div className="calendar-container w-100">
         <div className="calendar-grid">
+          <span className='' style={{display:'flex', justifyContent: 'center'}}>{weekDays[currentDate.getDay()]}</span>
           {hrs.map((slot) => (
             <div key={slot} className="time-row">
               <span className="time-label">{slot}</span>

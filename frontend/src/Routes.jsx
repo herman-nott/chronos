@@ -4,9 +4,9 @@ import { useState, useEffect } from 'react'
 
 // Import page components
 import CalendarPage from './components/Calendar/Calendar';
-import LoginPage from './components/Login/Login'
-import RegisterPage from './components/Register/Register'
-import VerifyEmailPage from './components/VerifyEmail/VerifyEmail';
+import LoginPage from './components/Auth/Login/Login'
+import RegisterPage from './components/Auth/Register/Register'
+import VerifyEmailPage from './components/Auth/VerifyEmail/VerifyEmail';
 
 
 const AppRoutes = () => {

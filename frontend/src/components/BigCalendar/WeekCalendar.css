@@ -9,7 +9,6 @@
   padding: 1em 0;
   overflow-x: auto;
 }
-
 .time-row {
   display: flex;
   align-items: start;
@@ -17,12 +16,15 @@
 }
 
 .time-label {
-  min-width: 48px;
+  width: 48px;
   text-align: left;
   font-size: 13px;
   color: var(--text-muted);
 }
 
+.week-block{
+  display: flex;
+}
 /* Time Blocks */
 .time-blocks {
   display: flex;
@@ -67,6 +69,12 @@
 .calendar-grid .weeks li {
   color: #333;
   font-size: 1.5em;
+}
+
+span {
+  color: #71717a;
+  display: flex; 
+  justify-content: center;
 }
 
 .calendar-grid .weeks {
