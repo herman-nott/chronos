@@ -7,6 +7,8 @@
   box-shadow: 0 4px 8px #00000026;
   /* background: linear-gradient(to top, rgba(255, 255, 255, 0.681), transparent); */
   border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 1em;
+  
 }
 
 .mon-calendar-inner {

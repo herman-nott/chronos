@@ -13,14 +13,15 @@ const TaskSchema = new mongoose.Schema({
         type: String 
     },
     due_date: { 
-        type: Date 
+        type: Date,
+        required: true 
     },
     is_completed: { 
         type: Boolean, 
         default: false 
     }, 
     reminders: [{ 
-        type: Date 
+        type: Number 
     }]
 }, { timestamps: true });
 

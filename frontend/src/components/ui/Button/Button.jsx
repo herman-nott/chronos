@@ -1,3 +1,4 @@
+import React from "react";
 import "./Button.css"; // import CSS for colors
 
 const Button = ({

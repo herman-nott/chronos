@@ -1,80 +1,64 @@
 // NewAppointment.jsx
-import React, { useState, useEffect } from "react";
-import "./NewEvent.css"; // same styling system
+import React, { useState } from "react";
+import "./NewEvent.css";
 
-export default function NewAppointment({ onClose, onCreate }) {
+export default function NewAppointment({ calendarId, onClose, onAppointmentCreated }) {
   const [title, setTitle] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [guests, setGuests] = useState("");
-  const [reminder, setReminder] = useState(15);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [myCalendars, setMyCalendars] = useState([]);
-  const [otherCalendars, setOtherCalendars] = useState([]);
-  const [calendarId, setCalendarId] = useState("");
-
-  // Load calendars like in NewEvent
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/calendars`, {
-      credentials: "include"
-    })
-      .then(res => res.json())
-      .then(data => {
-        setMyCalendars(data.myCalendars ?? []);
-        setOtherCalendars(data.otherCalendars ?? []);
-      })
-      .catch(err => console.error("Calendar load error:", err));
-  }, []);
-
-  async function handleSubmit() {
-    if (!title || !start || !end)
-      return alert("Title, start, and end time are required");
-
-    if (!calendarId)
-      return alert("Select calendar");
-
-    if (new Date(start) > new Date(end)) {
-      return alert("Start time cannot be later than End time");
+  const handleSubmit = async () => {
+    if (!title || !start || !end) {
+      return alert("Required fields missing");
     }
 
-    const payload = {
-      title,
-      start_time: start,
-      end_time: end,
-      description,
-      location,
-      participants: guests
-        .split(",")
-        .map(g => g.trim())
-        .filter(g => g.length > 0),
-      reminders: reminder ? [reminder] : [],
-    };
+    setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/appointments`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
-          body: JSON.stringify(payload)
-        }
-      );
+      const response = await fetch(`http://localhost:3000/api/appointments/${calendarId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          title,
+          start_time: start,
+          end_time: end,
+          description,
+          location,
+          participants: guests
+            .split(",")
+            .map((g) => g.trim())
+            .filter((v) => v),
+          reminders: []
+        })
+      });
 
-      if (!res.ok) {
-        const err = await res.json();
-        alert("Error: " + err.error);
-        return;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create appointment');
       }
 
-      const saved = await res.json();
-      onCreate(saved);
+      const data = await response.json();
+      
+      // Notify parent component that appointment was created
+      if (onAppointmentCreated) {
+        onAppointmentCreated(data.appointment);
+      }
+
       onClose();
-    } catch (err) {
-      console.error("Appointment create error:", err);
+    } catch (error) {
+      console.error('Error creating appointment:', error);
+      alert('Failed to create appointment: ' + error.message);
+    } finally {
+      setIsSubmitting(false);
     }
-  }
+  };
 
   return (
     <div className="event-popup">
@@ -83,30 +67,15 @@ export default function NewAppointment({ onClose, onCreate }) {
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
 
-      <label>Choose calendar:</label>
-      <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
-        <option value="">Select a calendar</option>
-
-        <optgroup label="My calendars">
-          {myCalendars.map(c => (
-            <option key={c._id} value={c._id}>{c.title}</option>
-          ))}
-        </optgroup>
-
-        <optgroup label="Shared with me">
-          {otherCalendars.map(c => (
-            <option key={c._id} value={c._id}>{c.title}</option>
-          ))}
-        </optgroup>
-      </select>
-
-      <input
-        type="text"
-        placeholder="Appointment title *"
-        className="input-title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="popup-row">
+        <input
+          type="text"
+          placeholder="Appointment title *"
+          className="input-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
 
       <div className="popup-row">
         <label>Start</label>
@@ -153,16 +122,13 @@ export default function NewAppointment({ onClose, onCreate }) {
         />
       </div>
 
-      <div className="popup-row">
-        <label>Reminder (min before)</label>
-        <input
-          type="number"
-          value={reminder}
-          onChange={(e) => setReminder(e.target.value)}
-        />
-      </div>
-
-      <button className="create-btn" onClick={handleSubmit}>Save</button>
+      <button 
+        className="create-btn" 
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Saving...' : 'Save'}
+      </button>
     </div>
   );
 }

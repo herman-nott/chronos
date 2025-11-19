@@ -1,25 +1,25 @@
-import Event from "../../database/models/Event.js";
+import Task from "../../database/models/Task.js";
 
-async function handleDeleteEvent(req, res) {
+async function handleDeleteTask(req, res) {
     try {
         const { id } = req.params;
 
-        const event = await Event.findById(id).populate("calendar_id");
-        if (!event) {
-            return res.status(404).json({ error: "Event not found" });
+        const task = await Task.findById(id).populate("calendar_id");
+        if (!task) {
+            return res.status(404).json({ error: "Task not found" });
         }
 
-        if (String(event.calendar_id.owner) !== req.session.user.id) {
+        if (String(task.calendar_id.owner) !== req.session.user.id) {
             return res.status(403).json({ error: "No access" });
         }
 
-        await event.deleteOne();
+        await task.deleteOne();
 
-        res.status(200).json({ message: "Event deleted" });
+        res.status(200).json({ message: "Task deleted" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 }
 
-export default handleDeleteEvent;
+export default handleDeleteTask;

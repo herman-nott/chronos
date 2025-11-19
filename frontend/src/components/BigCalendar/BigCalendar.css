@@ -1,7 +1,12 @@
 .big{
+  /* position: fixed; */
+
+  /* overflow: scroll; */
   background-color: rgba(240, 248, 255, 0.579);
-  overflow-y: auto;
+  margin-bottom: 2em;
+  margin-top: 1em;
+  border-radius: 9px;
+  overflow: scroll;
   scrollbar-width: none;
-  height: 100%;
-  /* -ms-overflow-style: none; */
+  -ms-overflow-style: none;
 }

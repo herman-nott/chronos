@@ -9,7 +9,7 @@ import NewCalendar from '../PopUp/NewClendar';
 
 import './LeftSide.css';
 
-const LeftSide = () => {
+const LeftSide = ({ onDataCreated }) => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
   const [newCalendarOpen, setNewCalendarOpen] = useState(false);
@@ -67,51 +67,68 @@ const LeftSide = () => {
         {/* Header Section */}
         <div className="header mt-5">
           <button className="menu-item mr-4" onClick={() => setNewEventOpen(!newEventOpen)}>
-            <span className="menu-text gap-1">
-              Create event 
-              <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
-            </span>
+            <span className="menu-text gap-1">Create event </span>
+            <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
           </button>
           {newEventOpen && (
-            <div className='options'>
-              <ul>
-                <li onClick={(e) => openPopup("event", e)}>Event</li>
-                <hr></hr>
-                <li onClick={(e) => openPopup("task", e)}>Task</li>
-                <hr></hr>
-                <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
-                <hr></hr>
-              </ul>
-            </div>
+            <ul className='options'>
+              <li onClick={(e) => openPopup("event", e)}>Event</li>
+              <li onClick={(e) => openPopup("task", e)}>Task</li>
+              <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
+            </ul>
           )}
 
           {popup === "event" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
               <NewEvent
+                calendarId={myCalendars[0]?._id}
                 onClose={() => setPopup(null)}
-                // onCreate={(data) => console.log("EVENT CREATED:", data)}
+                onEventCreated={(data) => {
+                  console.log("EVENT CREATED:", data);
+                  setPopup(null);
+                  // Call generic callback if provided
+                  if (onDataCreated) {
+                    onDataCreated('event', data);
+                  }
+                }}
               />
             </Popup>
           )}
+          
           {popup === "task" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
               <NewTask
+                calendarId={myCalendars[0]?._id}
                 onClose={() => setPopup(null)}
-                // onCreate={(data) => console.log("EVENT CREATED:", data)}
+                onTaskCreated={(data) => {
+                  console.log("TASK CREATED:", data);
+                  setPopup(null);
+                  if (onDataCreated) {
+                    onDataCreated('task', data);
+                  }
+                }}
               />
             </Popup>
           )}
-           {popup === "appointment" && (
+
+          {popup === "appointment" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
               <NewAppointment
+                calendarId={myCalendars[0]?._id}
                 onClose={() => setPopup(null)}
-                // onCreate={(data) => console.log("EVENT CREATED:", data)}
+                onAppointmentCreated={(data) => {
+                  console.log("APPOINTMENT CREATED:", data);
+                  setPopup(null);
+                  if (onDataCreated) {
+                    onDataCreated('appointment', data);
+                  }
+                }}
               />
             </Popup>
           )}
 
           <button className="menu-item mr-4">
-            <i className="fa-solid fa-gear white"></i>
+            <i className="fa-solid fa-gear"></i>
           </button>
         </div>
 
@@ -120,13 +137,10 @@ const LeftSide = () => {
           {!collapsed && <MiniCalendar />}
         </div>
 
-        <div className="menu-item gap-2"
+        <div className="gap-2"
         onClick={(e) => openPopup("calendar", e)}> 
-          <span className="mr-2 menu-text">
-            Add Calendar
-            <i className="fa-solid fa-plus transition-transform white">
-            </i>
-          </span>
+          <span className="mr-2">Add Calendar</span>
+          <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
 
         {popup === "calendar" && (

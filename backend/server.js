@@ -79,7 +79,7 @@ async function start() {
     app.get('/api/calendars', requireAuth, (req, res) => { handleGetCalendars(req, res) });
     app.get('/api/events/:calendarId', requireAuth, (req, res) => { handleGetEvents(req, res) });
     app.get('/api/tasks/:calendarId', requireAuth, (req, res) => { handleGetTasks(req, res) });
-    app.get('/api/appointment/:calendarId', requireAuth, (req, res) => { handleGetAppointments(req, res) });
+    app.get('/api/appointments/:calendarId', requireAuth, (req, res) => { handleGetAppointments(req, res) });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });
@@ -88,10 +88,10 @@ async function start() {
     app.post('/api/auth/logout', requireAuth, (req, res) => { handleLogout(req, res) });
     app.post('/api/auth/password-reset', (req, res) => { handlePasswordReset(req, res, crypto, nodemailer) });
     app.post('/api/auth/password-reset/:confirm_token', (req, res) => { handlePasswordResetConfirm(req, res, bcrypt, crypto) });
-    app.post('/api/calendars', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
-    app.post('/api/calendars/:calendarId/events', requireAuth, (req, res) => { handleCreateEvent(req, res) });
-    app.post('/api/calendars/:calendarId/tasks', requireAuth, (req, res) => { handleCreateTask(req, res) });
-    app.post('/api/calendars/:calendarId/appointments', requireAuth, (req, res) => { handleCreateAppointment(req, res) });
+    app.post('/api/calendar', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
+    app.post('/api/events/:calendarId', requireAuth, (req, res) => { handleCreateEvent(req, res) });
+    app.post('/api/tasks/:calendarId', requireAuth, (req, res) => { handleCreateTask(req, res) });
+    app.post('/api/appointments/:calendarId', requireAuth, (req, res) => { handleCreateAppointment(req, res) });
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });

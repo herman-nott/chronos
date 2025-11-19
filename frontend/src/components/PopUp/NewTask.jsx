@@ -1,66 +1,57 @@
-// NewTask.jsx
-import React, { useState, useEffect } from "react";
-import "./NewEvent.css"; // reuse same styles
+import React, { useState } from "react";
+import "./NewEvent.css";
 
-export default function NewTask({ onClose, onCreate }) {
+export default function NewTask({ calendarId, onClose, onTaskCreated }) {
   const [title, setTitle] = useState("");
-  const [date, setDate] = useState("");
   const [hasTime, setHasTime] = useState(false);
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
-  const [reminder, setReminder] = useState(15);
+  const [date, setDate] = useState("");
+  const [reminder, setReminder] = useState(10);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [myCalendars, setMyCalendars] = useState([]);
-  const [otherCalendars, setOtherCalendars] = useState([]);
-  const [calendarId, setCalendarId] = useState("");
+  const handleSubmit = async () => {
+    if (!title || !date) {
+      return alert("Title & Date required");
+    }
 
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/calendars`, {
-      credentials: "include"
-    })
-      .then(res => res.json())
-      .then(data => {
-        setMyCalendars(data.myCalendars ?? []);
-        setOtherCalendars(data.otherCalendars ?? []);
-      })
-      .catch(err => console.error("Calendar load error:", err));
-  }, []);
-
-
-  async function handleSubmit() {
-    if (!calendarId) return alert("Choose a calendar first");
-    if (!title || !date) return alert("Title & Date required");
-
-    // формируем due_date: если есть время, добавляем
-    const due_date = hasTime && time ? new Date(`${date}T${time}`) : new Date(date);
-
-    const taskData = {
-      title,
-      description,
-      due_date,
-      reminders: reminder ? [reminder] : [],
-    };
+    setIsSubmitting(true);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/tasks`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(taskData),
+      const response = await fetch(`http://localhost:3000/api/tasks/${calendarId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        credentials: 'include',
+        body: JSON.stringify({
+          title,
+          time: hasTime ? time : null,
+          description,
+          due_date: date,
+          is_completed: false,
+          reminders: reminder ? [reminder] : []
+        })
       });
 
-      if (!res.ok) {
-        const error = await res.json();
-        alert("Error: " + error.error);
-        return;
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create task');
       }
 
-      const saved = await res.json();
-      onCreate(saved.task); // возвращаем созданную таску
-      onClose();
+      const data = await response.json();
+      
+      // Notify parent component that task was created
+      if (onTaskCreated) {
+        onTaskCreated(data.task);
+      }
 
-    } catch (err) {
-      console.error("Task create error:", err);
+      onClose();
+    } catch (error) {
+      console.error('Error creating task:', error);
+      alert('Failed to create task: ' + error.message);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -71,26 +62,15 @@ export default function NewTask({ onClose, onCreate }) {
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
 
-      <label>Choose calendar:</label>
-      <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
-        <option value="">Select a calendar</option>
-
-        <optgroup label="My calendars">
-          {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
-        </optgroup>
-
-        <optgroup label="Shared with me">
-          {otherCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
-        </optgroup>
-      </select>
-
-      <input
-        type="text"
-        placeholder="Task title *"
-        className="input-title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+      <div className="popup-row">
+        <input
+          type="text"
+          placeholder="Task title *"
+          className="input-title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
+      </div>
 
       <div className="popup-row">
         <label>Date</label>
@@ -134,11 +114,17 @@ export default function NewTask({ onClose, onCreate }) {
         <input
           type="number"
           value={reminder}
-          onChange={(e) => setReminder(e.target.value)}
+          onChange={(e) => setReminder(Number(e.target.value))}
         />
       </div>
 
-      <button className="create-btn" onClick={handleSubmit}>Save</button>
+      <button 
+        className="create-btn" 
+        onClick={handleSubmit}
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? 'Saving...' : 'Save'}
+      </button>
     </div>
   );
 }

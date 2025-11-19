@@ -1,41 +1,16 @@
-
-
 .calendar-box {
   position: relative;
   width: 90%;
-  padding: 1em;
+  /* max-width: 364px; */
+  height: min-content;
+  margin: 0.5em;
+  padding-bottom: 1em;
+  /* mb-6 */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.627), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 1em;
-
-  /* Glass background */
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-
-  /* Ensure child content is above the pseudo-element */
-  isolation: isolate;
-}
-
-.calendar-box::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  /* covers full box */
-  padding: 2px;
-  /* border thickness */
-  border-radius: inherit;
-  /* perfect rounded border */
-  background: linear-gradient(135deg,
-      rgba(255, 255, 255, 0.65),
-      rgba(255, 255, 255, 0.05));
-
-  /* Mask the center so only the border shows */
-  -webkit-mask:
-    linear-gradient(#fff 0 0) content-box,
-    linear-gradient(#fff 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-  pointer-events: none;
-  /* border doesn't block clicks */
+  overflow: -moz-hidden-unscrollable;
 }
 
 .calendar-box.inCalendar{
@@ -47,6 +22,7 @@
     /* background: linear-gradient(to bottom, rgba(255, 255, 255, 0.834), transparent); */
     /* border: 1px solid rgba(255, 255, 255, 0.2); */
     border-radius: 1em;
+    /* overflow: -moz-hidden-unscrollable; */
     margin: 5px;
 }
 

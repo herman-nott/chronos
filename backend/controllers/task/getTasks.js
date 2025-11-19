@@ -5,18 +5,13 @@ async function handleGetTasks(req, res) {
     try {
         const { calendarId } = req.params;
 
-        const calendar = await Calendar.findOne({
-            _id: calendarId,
-            owner: req.session.user.id
-        });
-
+        const calendar = await Calendar.findOne({ _id: calendarId, owner: req.session.user.id });
         if (!calendar) {
             return res.status(403).json({ error: "No access or calendar not found" });
         }
 
         const tasks = await Task.find({ calendar_id: calendarId });
-
-        return res.status(200).json(tasks);
+        res.status(200).json(tasks);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: "Server error" });

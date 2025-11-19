@@ -9,6 +9,7 @@
   padding: 1em 0;
   overflow-x: auto;
 }
+
 .time-row {
   display: flex;
   align-items: start;
@@ -16,15 +17,12 @@
 }
 
 .time-label {
-  width: 48px;
+  min-width: 48px;
   text-align: left;
   font-size: 13px;
   color: var(--text-muted);
 }
 
-.week-block{
-  display: flex;
-}
 /* Time Blocks */
 .time-blocks {
   display: flex;
@@ -71,12 +69,6 @@
   font-size: 1.5em;
 }
 
-span {
-  color: #71717a;
-  display: flex; 
-  justify-content: center;
-}
-
 .calendar-grid .weeks {
   display: flex;
   justify-content: space-around;
@@ -89,3 +81,7 @@ span {
   font-weight: 400;
   color: var(--text-white);
 }
+
+.event-block.event { background-color: #2196F3; }
+.event-block.task { background-color: #4CAF50; }
+.event-block.appointment { background-color: #FF9800; }

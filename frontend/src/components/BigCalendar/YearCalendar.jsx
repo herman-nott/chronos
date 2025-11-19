@@ -4,13 +4,6 @@ import "./YearCalendar.css";
 import SmallCalendar from '../SmallCalendar/SmallCalendar';
 
 export default function YearView({ onDateChange, currentDate }) {
-  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
-
-  const months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
-  ];
-
   useEffect(() => {
     onDateChange({
       year:  currentDate.getFullYear(),
@@ -19,6 +12,13 @@ export default function YearView({ onDateChange, currentDate }) {
     });
   }, [ currentDate]);
 
+  // const [currMonth, setCurrMonth] = useState(today.getMonth());
+  const [currYear, setCurrYear] = useState(currentDate.getFullYear());
+
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
 
   return (
     <div className="calendar-container">

@@ -9,7 +9,7 @@ async function handleCreateEvent(req, res) {
         const calendar = await Calendar.findOne({ _id: calendarId, owner: req.session.user.id });
         if (!calendar) {
             return res.status(403).json({ error: "No access or calendar not found" });
-        }        
+        }
 
         const newEvent = new Event({
             calendar_id: calendarId,

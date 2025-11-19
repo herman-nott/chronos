@@ -28,7 +28,7 @@ const AppointmentSchema = new mongoose.Schema({
         type: String 
     }],
     reminders: [{ 
-        type: Date 
+        type: Number 
     }]
 }, { timestamps: true });
 

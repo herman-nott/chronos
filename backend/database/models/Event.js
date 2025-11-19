@@ -29,7 +29,7 @@ const EventSchema = new mongoose.Schema({
         default: false 
     },
     reminders: [{ 
-        type: Date // время уведомлений перед событием
+        type: Number // время уведомлений перед событием
     }],
 }, { timestamps: true });
 
