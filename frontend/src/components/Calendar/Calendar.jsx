@@ -277,6 +277,7 @@ export default function Calendar() {
 
   const handleToday = () => {
     setCurrentDate(new Date());
+    setSelectedView('Day');
   };
 
   if (error) {

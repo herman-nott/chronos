@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import "./SmallCalendar.css";
 
 export default function SmallCalendar({ variant='default', year, month, onDaySelect }) {

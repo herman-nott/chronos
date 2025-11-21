@@ -3,7 +3,7 @@ import "./MonthCalendar.css";
 import "./YearCalendar.css";
 import SmallCalendar from '../SmallCalendar/SmallCalendar';
 
-export default function YearView({ onDateChange, currentDate, handleSmallCalendarDaySelect }) {
+export default function YearView({ onDateChange, currentDate, DaySelect }) {
   const [currYear, setCurrYear] = useState(currentDate.getFullYear());
 
   const months = [
@@ -31,7 +31,7 @@ export default function YearView({ onDateChange, currentDate, handleSmallCalenda
                   variant="inCalendar" 
                   year={currYear} 
                   month={index}
-                  onDaySelect={handleSmallCalendarDaySelect}
+                  onDaySelect={DaySelect}
                 />
               </li>
             ))}

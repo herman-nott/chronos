@@ -9,7 +9,7 @@ import NewCalendar from '../PopUp/NewClendar';
 
 import './LeftSide.css';
 
-const LeftSide = ({ onDataCreated, onDaySelect  }) => {
+const LeftSide = ({ onDataCreated, onDaySelect }) => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
   const [newCalendarOpen, setNewCalendarOpen] = useState(false);
@@ -62,6 +62,7 @@ const LeftSide = ({ onDataCreated, onDaySelect  }) => {
      {!collapsed && (
       <div className="left-side-container">
         <div className='logo'>
+          <img src="../src/assets/images/logo.svg" alt='logo' className='logo-pick white'></img>
           <h1>Calendar</h1>
         </div>
         {/* Header Section */}
