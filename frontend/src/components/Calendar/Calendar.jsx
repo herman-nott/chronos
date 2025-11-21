@@ -355,22 +355,6 @@ export default function Calendar() {
           onEventCreated={handleEventCreated}
         />
       )}
-
-      {showNewTask && calendarId && (
-        <NewTask
-          calendarId={calendarId}
-          onClose={() => setShowNewTask(false)}
-          onTaskCreated={handleTaskCreated}
-        />
-      )}
-
-      {showNewAppointment && calendarId && (
-        <NewAppointment
-          calendarId={calendarId}
-          onClose={() => setShowNewAppointment(false)}
-          onAppointmentCreated={handleAppointmentCreated}
-        />
-      )}
     </>
   );
 }

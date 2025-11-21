@@ -76,7 +76,7 @@ async function start() {
     app.post('/api/auth/logout', requireAuth, (req, res) => { handleLogout(req, res) });
     app.post('/api/auth/password-reset', (req, res) => { handlePasswordReset(req, res, crypto, nodemailer) });
     app.post('/api/auth/password-reset/:confirm_token', (req, res) => { handlePasswordResetConfirm(req, res, bcrypt, crypto) });
-    app.post('/api/calendar', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
+    app.post('/api/calendars', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
     app.post('/api/calendars/:calendarId/events', requireAuth, (req, res) => { handleCreateEvent(req, res) });
 
     // === PATCH Requests ===

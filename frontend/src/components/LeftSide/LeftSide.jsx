@@ -23,6 +23,8 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
   const [popup, setPopup] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
 
+  const [visibleCalendars, setVisibleCalendars] = useState({});
+
   const openPopup = (view, e) => {
     const rect = e.target.getBoundingClientRect();
     setPopup(view);
@@ -34,18 +36,16 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
       method: "GET",
       credentials: "include",
     })
-      .then(async response => {
-        if (!response.ok) {
-          throw new Error("Server error");
-        }
-        return await response.json();
-      })
+      .then(async response => response.json())
       .then(data => {
         setMyCalendars(data.myCalendars);
         setOtherCalendars(data.otherCalendars);
-      })
-      .catch(err => {
-        console.error("Failed to load calendars:", err);
+
+        const visibility = {};
+        [...data.myCalendars, ...data.otherCalendars].forEach(c => {
+          visibility[c._id] = c.is_visible ?? true;
+        });
+        setVisibleCalendars(visibility);
       });
   }, []);
   
@@ -67,17 +67,10 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
         </div>
         {/* Header Section */}
         <div className="header mt-5">
-          <button className="menu-item mr-4" onClick={() => setNewEventOpen(!newEventOpen)}>
+          <button className="menu-item mr-4" onClick={(e) => openPopup("event", e)}>
             <span className="menu-text gap-1">Create event </span>
             <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
           </button>
-          {newEventOpen && (
-            <ul className='options'>
-              <li onClick={(e) => openPopup("event", e)}>Event</li>
-              <li onClick={(e) => openPopup("task", e)}>Task</li>
-              <li onClick={(e) => openPopup("appointment", e)}>Appointment</li>
-            </ul>
-          )}
 
           {popup === "event" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
@@ -185,7 +178,14 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                       <CheckBox
                         text={calendar.title}
                         id={`my-${calendar._id}`}
-                        onChange={() => {}}
+                        color={calendar.color}
+                        checked={visibleCalendars[calendar._id]}
+                        onChange={() => {
+                          setVisibleCalendars(prev => ({
+                            ...prev,
+                            [calendar._id]: !prev[calendar._id]
+                          }));
+                        }}
                       />
                       <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                     </div>
@@ -209,10 +209,17 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                     <div className="calendar-item" key={calendar._id}>
                       <CheckBox
                         text={calendar.title}
-                        id={`other-${calendar._id}`}
-                        onChange={() => {}}
+                        id={`my-${calendar._id}`}
+                        color={calendar.color}
+                        checked={visibleCalendars[calendar._id]}
+                        onChange={() => {
+                          setVisibleCalendars(prev => ({
+                            ...prev,
+                            [calendar._id]: !prev[calendar._id]
+                          }));
+                        }}
                       />
-                      <i className="fa-solid fa-ellipsis-vertical"></i>
+                      <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                     </div>
                   ))}
                 </>
