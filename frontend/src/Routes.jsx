@@ -7,14 +7,17 @@ import LoginPage from './components/Auth/Login/Login'
 import RegisterPage from './components/Auth/Register/Register'
 import VerifyEmailPage from './components/Auth/VerifyEmail/VerifyEmail';
 import ParticleBackground from './components/ParticleBackground/ParticleBackground'
+import BodyClassController from './components/BodyClassController/BodyClassController'
 
 const AppRoutes = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [userId, setUserId] = useState(null);
   const location = useLocation();
 
-  const authRoutes = ['/login', '/register', '/verify-email', '/password-reset'];
+  const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/'];
   const showParticle = authRoutes.includes(location.pathname);
+  console.log(location.pathname)
+  // console.log();
   
   function onLoginSuccess(userId) {
     setIsSignedIn(true);
@@ -31,6 +34,7 @@ const AppRoutes = () => {
   return (
    <>
       {showParticle && <ParticleBackground />}
+       <BodyClassController route={location.pathname} />
         <Routes>
           <Route path="/home" element={<CalendarPage />} />
           <Route path="/login" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />

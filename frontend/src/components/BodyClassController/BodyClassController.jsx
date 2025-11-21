@@ -1,8 +1,9 @@
 import { useEffect } from 'react';
+import './BodyClassController.css'
 
 function BodyClassController({ route }) {
     useEffect(() => {
-        const authRoutes = ['login', 'register', 'verify-email', 'password-reset'];
+        const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/'];
 
         if (authRoutes.includes(route)) {
             document.body.classList.add('auth-page');
@@ -10,7 +11,6 @@ function BodyClassController({ route }) {
             document.body.classList.remove('auth-page');
         }
     }, [route]);
-
     return null;
 }
 
