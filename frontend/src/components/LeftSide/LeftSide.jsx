@@ -9,7 +9,7 @@ import NewCalendar from '../PopUp/NewClendar';
 
 import './LeftSide.css';
 
-const LeftSide = ({ onDataCreated }) => {
+const LeftSide = ({ onDataCreated, onDaySelect  }) => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
   const [newCalendarOpen, setNewCalendarOpen] = useState(false);
@@ -134,7 +134,7 @@ const LeftSide = ({ onDataCreated }) => {
 
         {/* Mini Calendar */}
         <div className="smallCalendar">
-          {!collapsed && <MiniCalendar />}
+          {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
         </div>
 
         <div className="gap-2"

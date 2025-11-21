@@ -5,7 +5,7 @@ import BigCalendar from '../BigCalendar/BigCalendar';
 import NewEvent from '../PopUp/NewEvent';
 import NewTask from '../PopUp/NewTask';
 import NewAppointment from '../PopUp/NewAppointment';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './Calendar.css';
 
 import WeekView from '../BigCalendar/WeekCalendar';
@@ -198,6 +198,18 @@ export default function Calendar() {
     }
   };
 
+  //Small calendar selection 
+  const handleSmallCalendarDaySelect = (date) => {
+    setCurrentDate(date);
+    setSelectedView("Day");
+
+    setCurrentInfo({
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      day: date.getDate(),
+    });
+  };
+
   const renderView = () => {
     const commonProps = { 
       onDateChange: setCurrentInfo, 
@@ -271,7 +283,7 @@ export default function Calendar() {
     return (
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar onDataCreated={handleDataCreated} />
+          <CalendarSidebar onDataCreated={handleDataCreated} onDaySelect={handleSmallCalendarDaySelect} />
           <div className="calendar-content">
             <div style={{ padding: '20px', color: 'red' }}>
               <h3>Error Loading Calendar</h3>
@@ -284,6 +296,11 @@ export default function Calendar() {
     );
   }
 
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  
   return (
     <>
       <div className="calendar-main">
@@ -300,10 +317,10 @@ export default function Calendar() {
               </div>
               
               <span>
-                {currentInfo.year && currentInfo.month !== null
-                  ? `${currentInfo.day ? currentInfo.day + " " : ""}${currentInfo.month + 1}/${currentInfo.year}`
-                  : "Loading..."}
-              </span>
+                  {currentInfo.year && currentInfo.month !== null
+                    ? `${currentInfo.day ? currentInfo.day + " " : ""} ${months[currentInfo.month]} ${currentInfo.year}`
+                    : "Loading..."}
+                </span>
 
               <div className="toolbar-center">
                 <Button text="Day" onClick={() => setSelectedView('Day')} />

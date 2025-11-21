@@ -1,11 +1,8 @@
 import React, { useState } from "react";
 import "./SmallCalendar.css";
 
-export default function SmallCalendar({ variant='default', year, month }) {
+export default function SmallCalendar({ variant='default', year, month, onDaySelect }) {
   const today = new Date();
-  // const currMonth = variant === "inCalendar" ? month : (month ?? today.getMonth());
-  // const currYear = variant === "inCalendar" ? year : (year ?? today.getFullYear());
-
   const [currMonth, setCurrMonth] = useState(month ?? today.getMonth()); 
   const [currYear, setCurrYear] = useState(year ?? today.getFullYear());
   const months = [
@@ -110,7 +107,10 @@ export default function SmallCalendar({ variant='default', year, month }) {
         {/* Days */}
         <ul className="days">
           {days.map((dayObj, index) => (
-            <li key={index} className={dayObj.className}>
+            <li key={index} className={dayObj.className} onClick={() => {
+              if (dayObj.className === 'inactive') return;
+              onDaySelect?.(new Date(currYear, currMonth, dayObj.day));
+            }} >
               {dayObj.day}
             </li>
           ))}
