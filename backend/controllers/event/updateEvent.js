@@ -6,20 +6,22 @@ async function handleUpdateEvent(req, res) {
         const updates = req.body;
 
         const event = await Event.findById(id).populate("calendar_id");
+
         if (!event) {
             return res.status(404).json({ error: "Event not found" });
         }
 
         if (String(event.calendar_id.owner) !== req.session.user.id) {
-            return res.status(403).json({ error: "No access" });
+            return res.status(403).json({ error: "Access denied" });
         }
 
         Object.assign(event, updates);
+
         await event.save();
 
-        res.status(200).json({ message: "Event updated", event });
-    } catch (error) {
-        console.error(error);
+        res.json({ message: "Event updated", event });
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Server error" });
     }
 }

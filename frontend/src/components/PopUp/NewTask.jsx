@@ -3,57 +3,68 @@ import "./NewEvent.css";
 
 export default function NewTask({ calendarId, onClose, onTaskCreated }) {
   const [title, setTitle] = useState("");
+  const [date, setDate] = useState("");
   const [hasTime, setHasTime] = useState(false);
   const [time, setTime] = useState("");
   const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
   const [reminder, setReminder] = useState(10);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = async () => {
-    if (!title || !date) {
-      return alert("Title & Date required");
+  function buildDueDate() {
+    if (!date) return null;
+
+    if (!hasTime || !time) {
+      return `${date}T00:00:00`;
     }
 
-    setIsSubmitting(true);
+    return `${date}T${time}:00`;
+  }
+
+  async function handleSubmit() {
+    if (!title || !date) {
+      alert("Title and date are required");
+      return;
+    }
+
+    const dueDate = buildDueDate();
+
+    setLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/tasks/${calendarId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          title,
-          time: hasTime ? time : null,
-          description,
-          due_date: date,
-          is_completed: false,
-          reminders: reminder ? [reminder] : []
-        })
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/tasks`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({
+            title,
+            description,
+            due_date: dueDate,
+            reminders: reminder ? [Number(reminder)] : []
+          })
+        }
+      );
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create task');
+        const err = await response.json();
+        throw new Error(err.error || "Failed to create task");
       }
 
       const data = await response.json();
-      
-      // Notify parent component that task was created
-      if (onTaskCreated) {
-        onTaskCreated(data.task);
-      }
+      if (onTaskCreated) onTaskCreated(data.task);
 
       onClose();
-    } catch (error) {
-      console.error('Error creating task:', error);
-      alert('Failed to create task: ' + error.message);
+
+    } catch (err) {
+      console.error("Task create error:", err);
+      alert(err.message);
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);
     }
-  };
+  }
 
   return (
     <div className="event-popup">
@@ -114,16 +125,16 @@ export default function NewTask({ calendarId, onClose, onTaskCreated }) {
         <input
           type="number"
           value={reminder}
-          onChange={(e) => setReminder(Number(e.target.value))}
+          onChange={(e) => setReminder(e.target.value)}
         />
       </div>
 
-      <button 
-        className="create-btn" 
+      <button
+        className="create-btn"
         onClick={handleSubmit}
-        disabled={isSubmitting}
+        disabled={loading}
       >
-        {isSubmitting ? 'Saving...' : 'Save'}
+        {loading ? "Saving..." : "Save"}
       </button>
     </div>
   );

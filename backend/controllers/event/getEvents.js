@@ -5,15 +5,20 @@ async function handleGetEvents(req, res) {
     try {
         const { calendarId } = req.params;
 
-        const calendar = await Calendar.findOne({ _id: calendarId, owner: req.session.user.id });
+        const calendar = await Calendar.findById(calendarId);
+
         if (!calendar) {
-            return res.status(403).json({ error: "No access or calendar not found" });
+            return res.status(404).json({ error: "Calendar not found" });
+        }
+
+        if (String(calendar.owner) !== req.session.user.id) {
+            return res.status(403).json({ error: "Access denied" });
         }
 
         const events = await Event.find({ calendar_id: calendarId });
-        res.status(200).json(events);
-    } catch (error) {
-        console.error(error);
+        res.json(events);
+    } catch (err) {
+        console.error(err);
         res.status(500).json({ error: "Server error" });
     }
 }

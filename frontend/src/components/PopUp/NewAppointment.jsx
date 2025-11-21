@@ -1,60 +1,63 @@
-// NewAppointment.jsx
 import React, { useState } from "react";
 import "./NewEvent.css";
 
 export default function NewAppointment({ calendarId, onClose, onAppointmentCreated }) {
-  const [title, setTitle] = useState("");
-  const [start, setStart] = useState("");
-  const [end, setEnd] = useState("");
-  const [location, setLocation] = useState("");
-  const [description, setDescription] = useState("");
-  const [guests, setGuests] = useState("");
+  const [form, setForm] = useState({
+    title: "",
+    start: "",
+    end: "",
+    location: "",
+    description: "",
+    guests: ""
+  });
+
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const update = (field, value) => {
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const parseGuests = () => {
+    return form.guests
+      .split(",")
+      .map((g) => g.trim())
+      .filter((v) => v);
+  };
+
   const handleSubmit = async () => {
-    if (!title || !start || !end) {
-      return alert("Required fields missing");
+    if (!form.title || !form.start || !form.end) {
+      return alert("Title, start time and end time are required.");
     }
 
     setIsSubmitting(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/api/appointments/${calendarId}`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          title,
-          start_time: start,
-          end_time: end,
-          description,
-          location,
-          participants: guests
-            .split(",")
-            .map((g) => g.trim())
-            .filter((v) => v),
-          reminders: []
-        })
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to create appointment');
-      }
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/calendars/${calendarId}/appointments`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify({
+            title: form.title,
+            start_time: form.start,
+            end_time: form.end,
+            location: form.location,
+            description: form.description,
+            participants: parseGuests(),
+            reminders: [],
+          }),
+        }
+      );
 
       const data = await response.json();
-      
-      // Notify parent component that appointment was created
-      if (onAppointmentCreated) {
-        onAppointmentCreated(data.appointment);
-      }
+      if (!response.ok) throw new Error(data.error || "Failed to create appointment");
 
+      if (onAppointmentCreated) onAppointmentCreated(data.appointment);
       onClose();
-    } catch (error) {
-      console.error('Error creating appointment:', error);
-      alert('Failed to create appointment: ' + error.message);
+    } catch (err) {
+      alert("Failed to create appointment: " + err.message);
+      console.error(err);
     } finally {
       setIsSubmitting(false);
     }
@@ -70,10 +73,10 @@ export default function NewAppointment({ calendarId, onClose, onAppointmentCreat
       <div className="popup-row">
         <input
           type="text"
-          placeholder="Appointment title *"
+          placeholder="Title *"
           className="input-title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
+          value={form.title}
+          onChange={(e) => update("title", e.target.value)}
         />
       </div>
 
@@ -81,8 +84,8 @@ export default function NewAppointment({ calendarId, onClose, onAppointmentCreat
         <label>Start</label>
         <input
           type="datetime-local"
-          value={start}
-          onChange={(e) => setStart(e.target.value)}
+          value={form.start}
+          onChange={(e) => update("start", e.target.value)}
         />
       </div>
 
@@ -90,8 +93,8 @@ export default function NewAppointment({ calendarId, onClose, onAppointmentCreat
         <label>End</label>
         <input
           type="datetime-local"
-          value={end}
-          onChange={(e) => setEnd(e.target.value)}
+          value={form.end}
+          onChange={(e) => update("end", e.target.value)}
         />
       </div>
 
@@ -99,16 +102,16 @@ export default function NewAppointment({ calendarId, onClose, onAppointmentCreat
         <input
           type="text"
           placeholder="Location"
-          value={location}
-          onChange={(e) => setLocation(e.target.value)}
+          value={form.location}
+          onChange={(e) => update("location", e.target.value)}
         />
       </div>
 
       <div className="popup-row">
         <textarea
           placeholder="Description"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
+          value={form.description}
+          onChange={(e) => update("description", e.target.value)}
         />
       </div>
 
@@ -116,18 +119,18 @@ export default function NewAppointment({ calendarId, onClose, onAppointmentCreat
         <label>Guests (emails, comma separated)</label>
         <input
           type="text"
-          placeholder="e.g. john@mail.com, anna@mail.com"
-          value={guests}
-          onChange={(e) => setGuests(e.target.value)}
+          placeholder="example@mail.com, anna@mail.com"
+          value={form.guests}
+          onChange={(e) => update("guests", e.target.value)}
         />
       </div>
 
-      <button 
-        className="create-btn" 
+      <button
+        className="create-btn"
         onClick={handleSubmit}
         disabled={isSubmitting}
       >
-        {isSubmitting ? 'Saving...' : 'Save'}
+        {isSubmitting ? "Saving..." : "Save"}
       </button>
     </div>
   );
