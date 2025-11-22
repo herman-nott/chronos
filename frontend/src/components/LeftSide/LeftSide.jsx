@@ -6,6 +6,7 @@ import NewEvent from '../PopUp/NewEvent';
 import NewTask from "../PopUp/NewTask";
 import NewAppointment from "../PopUp/NewAppointment";
 import NewCalendar from '../PopUp/NewClendar';
+import EditCalendar from '../PopUp/EditCalendar';
 
 import './LeftSide.css';
 
@@ -24,6 +25,31 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
 
   const [visibleCalendars, setVisibleCalendars] = useState({});
+
+  const [menuCalendarId, setMenuCalendarId] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+  
+  
+  const [editingCalendar, setEditingCalendar] = useState(null);
+
+  const openCalendarMenu = (calendarId, e) => {
+    e.stopPropagation();
+    const rect = e.target.getBoundingClientRect();
+    setMenuCalendarId(calendarId);
+    setMenuPosition({ x: rect.left - 150, y: rect.bottom + 5 });
+  };
+
+  const handleEditCalendar = (calendar, e) => {
+    const rect = e.target.getBoundingClientRect();
+
+    setPopupPosition({
+      x: rect.right + 10,
+      y: rect.top
+    });
+
+    setEditingCalendar(calendar);
+    setPopup("edit-calendar");
+  };
 
   const openPopup = (view, e) => {
     const rect = e.target.getBoundingClientRect();
@@ -88,38 +114,32 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
               />
             </Popup>
           )}
-          
-          {popup === "task" && (
-            <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <NewTask
-                calendarId={myCalendars[0]?._id}
+
+          {popup === "edit-calendar" && (
+            <Popup position={popupPosition} onClose={() => {setMenuCalendarId(null); setPopup(null);}}>
+              <EditCalendar
+                calendar={editingCalendar}
                 onClose={() => setPopup(null)}
-                onTaskCreated={(data) => {
-                  console.log("TASK CREATED:", data);
-                  setPopup(null);
-                  if (onDataCreated) {
-                    onDataCreated('task', data);
-                  }
+                onSave={(updatedData) => {
+                  fetch(`http://localhost:3000/api/calendars/${editingCalendar._id}`, {
+                    method: "PATCH",
+                    credentials: "include",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedData)
+                  })
+                    .then(res => res.json())
+                    .then(updated => {
+                      setMyCalendars(prev =>
+                        prev.map(c => (c._id === updated._id ? updated : c))
+                      );
+                      setPopup(null);
+                    });
                 }}
               />
             </Popup>
           )}
 
-          {popup === "appointment" && (
-            <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <NewAppointment
-                calendarId={myCalendars[0]?._id}
-                onClose={() => setPopup(null)}
-                onAppointmentCreated={(data) => {
-                  console.log("APPOINTMENT CREATED:", data);
-                  setPopup(null);
-                  if (onDataCreated) {
-                    onDataCreated('appointment', data);
-                  }
-                }}
-              />
-            </Popup>
-          )}
+
 
           <button className="mr-4 menu-item">
             <i className="fa-solid fa-gear white"></i>
@@ -159,6 +179,37 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           </Popup>
         )}
 
+        {menuCalendarId && (
+          <Popup position={menuPosition} onClose={() => setMenuCalendarId(null)}>
+            <div className="calendar-menu">
+              <div 
+                className="calendar-menu-item" 
+                onClick={(e) => {
+                  const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === menuCalendarId);
+                  handleEditCalendar(calendar, e);
+                  setMenuCalendarId(null);
+                }}
+              >
+                Edit calendar
+              </div>
+
+              <div 
+                className="calendar-menu-item" 
+                // onClick={() => handleInvite(menuCalendarId)}
+              >
+                Invite people
+              </div>
+
+              <div 
+                className="calendar-menu-item delete"
+                // onClick={() => handleDeleteCalendar(menuCalendarId)}
+              >
+                Delete calendar
+              </div>
+            </div>
+          </Popup>
+        )}
+
         {/* Calendar Lists */}
         {!collapsed && (
           <div className="calendar-section">
@@ -187,7 +238,12 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                           }));
                         }}
                       />
-                      <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
+                      {calendar._id !== myCalendars[0]?._id && (
+                        <i
+                          className="fa-solid fa-ellipsis-vertical calendar-arrow"
+                          onClick={(e) => openCalendarMenu(calendar._id, e)}
+                        ></i>
+                      )}
                     </div>
                   ))}
                 </>
@@ -219,7 +275,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                           }));
                         }}
                       />
-                      <i className="fa-solid fa-ellipsis-vertical calendar-arrow"></i>
                     </div>
                   ))}
                 </>

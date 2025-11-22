@@ -24,11 +24,7 @@ export default function Calendar() {
 
   const [calendarId, setCalendarId] = useState(null);
   const [events, setEvents] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [appointments, setAppointments] = useState([]);
   const [showNewEvent, setShowNewEvent] = useState(false);
-  const [showNewTask, setShowNewTask] = useState(false);
-  const [showNewAppointment, setShowNewAppointment] = useState(false);
   const [loading, setLoading] = useState({
     events: true,
     tasks: true,
@@ -118,60 +114,8 @@ export default function Calendar() {
     }
   };
 
-  // Fetch tasks for the selected calendar
-  const fetchTasks = async () => {
-    if (!calendarId) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:3000/api/tasks/${calendarId}`, {
-        credentials: 'include',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch tasks');
-      }
-
-      const data = await response.json();
-      setTasks(data);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      setTasks([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch tasks for the selected calendar
-  const fetchAppointments = async () => {
-    if (!calendarId) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:3000/api/appointments/${calendarId}`, {
-        credentials: 'include',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch appointments');
-      }
-
-      const data = await response.json();
-      setAppointments(data);
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-      setAppointments([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchEvents();
-    fetchTasks();
-    fetchAppointments();
   }, [calendarId]);
 
   // Handle event creation from toolbar
@@ -179,22 +123,10 @@ export default function Calendar() {
     setEvents([...events, newEvent]);
   };
 
-  const handleTaskCreated = (newTask) => {
-    setTasks([...tasks, newTask]);
-  };
-
-  const handleAppointmentCreated = (newAppointment) => {
-    setAppointments([...appointments, newAppointment]);
-  };
-
   // Handle data creation from sidebar (events, tasks, appointments)
   const handleDataCreated = (type, data) => {
     if (type === 'event') {
       fetchEvents();
-    } else if (type === 'task') {
-      fetchTasks();
-    } else if (type === 'appointment') {
-      fetchAppointments();
     }
   };
 
@@ -215,8 +147,6 @@ export default function Calendar() {
       onDateChange: setCurrentInfo, 
       currentDate,
       events,
-      tasks,
-      appointments,
       onEventClick: (event) => console.log('Event clicked:', event),
       onTaskClick: (task) => console.log('Task clicked:', task),
       onAppointmentClick: (appointment) => console.log('Appointment clicked:', appointment),
