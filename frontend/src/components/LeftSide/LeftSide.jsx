@@ -63,10 +63,10 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
       <div className="left-side-container">
         <div className='logo'>
           <img src="../src/assets/images/logo.svg" alt='logo' className='logo-pick white'></img>
-          <h1>Calendar</h1>
+          <h1>Chronos</h1>
         </div>
         {/* Header Section */}
-        <div className="header mt-5">
+        <div className="header">
           <button className="menu-item mr-4" onClick={(e) => openPopup("event", e)}>
             <span className="menu-text gap-1">Create event </span>
             <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
@@ -121,8 +121,8 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
             </Popup>
           )}
 
-          <button className="menu-item mr-4">
-            <i className="fa-solid fa-gear"></i>
+          <button className="mr-4 menu-item">
+            <i className="fa-solid fa-gear white"></i>
           </button>
         </div>
 
@@ -131,9 +131,9 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
         </div>
 
-        <div className="gap-2"
+        <div className="gap-2 menu-item"
         onClick={(e) => openPopup("calendar", e)}> 
-          <span className="mr-2">Add Calendar</span>
+          <span className="mr-2 menu-text">Add Calendar</span>
           <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
 

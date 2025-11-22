@@ -1,10 +1,7 @@
 .mon-calendar-box {
   position: relative;
   width: 100%;
-  min-height: 70%;
-  /* max-width: 364px; */
-  /* mb-6 */
-  box-shadow: 0 4px 8px #00000026;
+  height: 100vh;
   /* background: linear-gradient(to top, rgba(255, 255, 255, 0.681), transparent); */
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
@@ -16,7 +13,6 @@
   align-items: start;
   padding: 3em 1.5em;
   /* py-2 px-5 */
-
 }
 
 /* head */
@@ -95,7 +91,7 @@
   z-index: 1;
   cursor: pointer;
   position: relative;
-  margin-top: 20px;
+  margin-top: 5%;
 }
 
 .mon-days li.inactive {

@@ -74,6 +74,7 @@
   flex: 1;
   align-items: start;
 }
+
 .calendar-box.inCalendar .calendar-header-left{
   height: 1.5em;
 }
@@ -101,7 +102,7 @@
   font-size: 1em;
   font-weight: 600;
   line-height: 1.5rem;
-  color: var(--text-white);
+  color: #333;
   margin-bottom: 2em;
 }
 
@@ -110,6 +111,7 @@
   height: 10px;
   color: var(--text-white);
 }
+
 .calendar-box.inCalendar .calendar-arrow {
   display: none;
 }
@@ -152,7 +154,7 @@
   z-index: 1;
   cursor: pointer;
   position: relative;
-  margin-top: 20px;
+  margin-top: 18px;
 }
 
 .calendar-box.inCalendar .days li{

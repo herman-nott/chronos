@@ -306,7 +306,7 @@ export default function Calendar() {
     <>
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar onDataCreated={handleDataCreated} />
+          <CalendarSidebar onDataCreated={handleDataCreated} onDaySelect={handleSmallCalendarDaySelect}/>
 
           <div className="calendar-content">
             <div className="calendar-toolbar">
