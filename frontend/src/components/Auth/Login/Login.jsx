@@ -1,6 +1,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router-dom';
 import './Login.css'
+import { Background } from '@tsparticles/engine';
+
+const API_URL = "http://localhost:3000";
 
 function Login({ onLoginSuccess }) {
   const navigate = useNavigate();
@@ -25,7 +28,7 @@ function Login({ onLoginSuccess }) {
   }
 
   function onSubmitLogIn() {
-    fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+    fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -55,7 +58,7 @@ function Login({ onLoginSuccess }) {
         return;
       }
 
-      fetch(`${import.meta.env.VITE_API_URL}/auth/password-reset`, {
+      fetch(`${API_URL}/auth/password-reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 

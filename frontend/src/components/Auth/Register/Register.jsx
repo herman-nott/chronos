@@ -164,6 +164,17 @@ function Register() {
                 onClick={onSubmitRegister} 
               />
             </div>
+
+            <div className="">
+              {/* <input 
+                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+                id="register-bnt" 
+                type="submit" 
+                value="Login" 
+                onClick={onSubmitRegister} 
+              /> */}
+            <p className="f6 link dim black db pointer underline" onClick={() => navigate('/login')}>Login</p>
+            </div>
           </div>
         </main>
       </article>
@@ -181,23 +192,7 @@ function Register() {
         </p>
       )}
         
-      {/* <style jsx>{`
-          .flex-container {
-              display: flex;
-              gap: 2rem;
-          }
-          .flex-item {
-              flex: 1;
-          }
-          #register-bnt {
-              margin-top: 20px;
-          }
-          @media (max-width: 768px) {
-              .flex-container {
-                  flex-direction: column;
-              }
-          }
-      `}</style> */}
+    
     </div>
   );
 }

@@ -3,9 +3,7 @@ import SearchView from '../ui/SearchView/SearchView';
 import CalendarSidebar from '../LeftSide/LeftSide';
 import BigCalendar from '../BigCalendar/BigCalendar';
 import NewEvent from '../PopUp/NewEvent';
-import NewTask from '../PopUp/NewTask';
-import NewAppointment from '../PopUp/NewAppointment';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './Calendar.css';
 
 import WeekView from '../BigCalendar/WeekCalendar';
@@ -24,16 +22,8 @@ export default function Calendar() {
 
   const [calendarId, setCalendarId] = useState(null);
   const [events, setEvents] = useState([]);
-  const [tasks, setTasks] = useState([]);
-  const [appointments, setAppointments] = useState([]);
   const [showNewEvent, setShowNewEvent] = useState(false);
-  const [showNewTask, setShowNewTask] = useState(false);
-  const [showNewAppointment, setShowNewAppointment] = useState(false);
-  const [loading, setLoading] = useState({
-    events: true,
-    tasks: true,
-    appointments: true
-  });
+  const [loading, setLoading] = useState(true);  // Single loading state
   const [error, setError] = useState(null);
 
   // Fetch user's calendars
@@ -68,7 +58,7 @@ export default function Calendar() {
   // Create default calendar if none exists
   const createDefaultCalendar = async () => {
     try {
-      const response = await fetch('http://localhost:3000/api/calendar', {
+      const response = await fetch('http://localhost:3000/api/calendars', {  // Fixed endpoint
         method: 'POST',
         headers: { 
           'Content-Type': 'application/json',
@@ -118,84 +108,30 @@ export default function Calendar() {
     }
   };
 
-  // Fetch tasks for the selected calendar
-  const fetchTasks = async () => {
-    if (!calendarId) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:3000/api/tasks/${calendarId}`, {
-        credentials: 'include',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch tasks');
-      }
-
-      const data = await response.json();
-      setTasks(data);
-    } catch (error) {
-      console.error('Error fetching tasks:', error);
-      setTasks([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Fetch tasks for the selected calendar
-  const fetchAppointments = async () => {
-    if (!calendarId) return;
-
-    setLoading(true);
-    try {
-      const response = await fetch(`http://localhost:3000/api/appointments/${calendarId}`, {
-        credentials: 'include',
-        headers: { 'Accept': 'application/json' }
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch appointments');
-      }
-
-      const data = await response.json();
-      setAppointments(data);
-    } catch (error) {
-      console.error('Error fetching appointments:', error);
-      setAppointments([]);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     fetchEvents();
-    fetchTasks();
-    fetchAppointments();
   }, [calendarId]);
 
-  // Handle event creation from toolbar
+  // Handle event creation
   const handleEventCreated = (newEvent) => {
     setEvents([...events, newEvent]);
   };
 
-  const handleTaskCreated = (newTask) => {
-    setTasks([...tasks, newTask]);
-  };
-
-  const handleAppointmentCreated = (newAppointment) => {
-    setAppointments([...appointments, newAppointment]);
-  };
-
-  // Handle data creation from sidebar (events, tasks, appointments)
+  // Handle data creation from sidebar - just refetch
   const handleDataCreated = (type, data) => {
-    if (type === 'event') {
-      fetchEvents();
-    } else if (type === 'task') {
-      fetchTasks();
-    } else if (type === 'appointment') {
-      fetchAppointments();
-    }
+    fetchEvents();
+  };
+
+  // Small calendar selection 
+  const handleSmallCalendarDaySelect = (date) => {
+    setCurrentDate(date);
+    setSelectedView("Day");
+
+    setCurrentInfo({
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      day: date.getDate(),
+    });
   };
 
   const renderView = () => {
@@ -203,16 +139,9 @@ export default function Calendar() {
       onDateChange: setCurrentInfo, 
       currentDate,
       events,
-      tasks,
-      appointments,
       onEventClick: (event) => console.log('Event clicked:', event),
-      onTaskClick: (task) => console.log('Task clicked:', task),
-      onAppointmentClick: (appointment) => console.log('Appointment clicked:', appointment),
       onTimeSlotClick: (date) => {
         setCurrentDate(date);
-        // setShowNewEvent(true); -- modals so far are meaningless unless we make up some kind of dropdown menu for these
-        // setShowNewTask(true);
-        // setShowNewAppointment(true);
       }
     };
 
@@ -265,13 +194,14 @@ export default function Calendar() {
 
   const handleToday = () => {
     setCurrentDate(new Date());
+    setSelectedView('Day');
   };
 
   if (error) {
     return (
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar onDataCreated={handleDataCreated} />
+          <CalendarSidebar onDataCreated={handleDataCreated} onDaySelect={handleSmallCalendarDaySelect} />
           <div className="calendar-content">
             <div style={{ padding: '20px', color: 'red' }}>
               <h3>Error Loading Calendar</h3>
@@ -284,11 +214,16 @@ export default function Calendar() {
     );
   }
 
+  const months = [
+    "January", "February", "March", "April", "May", "June",
+    "July", "August", "September", "October", "November", "December"
+  ];
+  
   return (
     <>
       <div className="calendar-main">
         <div className="calendar-layout">
-          <CalendarSidebar onDataCreated={handleDataCreated} />
+          <CalendarSidebar onDataCreated={handleDataCreated} onDaySelect={handleSmallCalendarDaySelect} />
 
           <div className="calendar-content">
             <div className="calendar-toolbar">
@@ -301,7 +236,7 @@ export default function Calendar() {
               
               <span>
                 {currentInfo.year && currentInfo.month !== null
-                  ? `${currentInfo.day ? currentInfo.day + " " : ""}${currentInfo.month + 1}/${currentInfo.year}`
+                  ? `${currentInfo.day ? currentInfo.day + " " : ""} ${months[currentInfo.month]} ${currentInfo.year}`
                   : "Loading..."}
               </span>
 
@@ -318,7 +253,7 @@ export default function Calendar() {
             </div>
 
             <div className="big-calendar">
-              {loading.events || loading.tasks || loading.appointments ? (
+              {loading ? (
                 <div>Loading events...</div>
               ) : (
                 <BigCalendar>
@@ -335,22 +270,6 @@ export default function Calendar() {
           calendarId={calendarId}
           onClose={() => setShowNewEvent(false)}
           onEventCreated={handleEventCreated}
-        />
-      )}
-
-      {showNewTask && calendarId && (
-        <NewTask
-          calendarId={calendarId}
-          onClose={() => setShowNewTask(false)}
-          onTaskCreated={handleTaskCreated}
-        />
-      )}
-
-      {showNewAppointment && calendarId && (
-        <NewAppointment
-          calendarId={calendarId}
-          onClose={() => setShowNewAppointment(false)}
-          onAppointmentCreated={handleAppointmentCreated}
         />
       )}
     </>

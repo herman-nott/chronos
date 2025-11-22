@@ -19,10 +19,6 @@ export default function Popup({ children, position, onClose }) {
     <div 
       id="popup-box"
       className="popup-container"
-      // style={{
-      //   top: position?.y || 50,
-      //   left: position?.x || 50
-      // }}
     >
       {children}
     </div>

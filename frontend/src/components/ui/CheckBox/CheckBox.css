@@ -1,0 +1,31 @@
+.calendar-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 4px 0;
+  user-select: none;
+}
+
+.checkbox-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.checkmark-icon {
+  color: white;
+  font-size: 12px;
+  pointer-events: none;
+}
+
+.checkbox-label {
+  font-size: 14px;
+}

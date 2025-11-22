@@ -8,6 +8,8 @@
 .calendar-grid {
   padding: 1em 0;
   overflow-x: auto;
+  padding: 1rem;
+  margin-bottom: 4rem;
 }
 
 .time-row {
@@ -82,6 +84,6 @@
   color: var(--text-white);
 }
 
-.event-block.event { background-color: #2196F3; }
+.event-block.reminder { background-color: #2196F3; }
 .event-block.task { background-color: #4CAF50; }
-.event-block.appointment { background-color: #FF9800; }
+.event-block.arrangement { background-color: #FF9800; }

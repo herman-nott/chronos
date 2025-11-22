@@ -1,3 +1,4 @@
+
 .forms-container {
   position: relative;
   width: 100%;
@@ -17,7 +18,10 @@
   width: 50%;
   flex-shrink: 0;
 }
-
+main{
+  background-color:#ffffff86;
+  z-index: 100;
+}
 .forms-wrapper.resetting {
   transform: translateX(-50%);
 }
