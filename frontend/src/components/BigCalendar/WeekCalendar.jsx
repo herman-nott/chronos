@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './WeekCalendar.css';
 
 export default function WeekView({ onDateChange, currentDate, events = [], tasks = [], appointments = [], onTimeSlotClick, onEventClick, onTaskClick, onAppointmentClick }) {
+   const [popup, setPopup] = useState(null);
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -95,6 +96,13 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
       }
       return newSet;
     });
+    openPopup("event", e);
+  };
+
+  const openPopup = (view, e) => {
+    const rect = e.target.getBoundingClientRect();
+    setPopup(view);
+    setPopupPosition({ x: rect.right + 10, y: rect.top });
   };
 
   const renderTimeBlocks = (timeSlot) => {

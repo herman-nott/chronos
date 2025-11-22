@@ -22,7 +22,7 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
   const [otherCalendars, setOtherCalendars] = useState([]);
 
   const [popup, setPopup] = useState(null);
-  const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
+  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
 
   const [visibleCalendars, setVisibleCalendars] = useState({});
 
@@ -36,14 +36,14 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
     e.stopPropagation();
     const rect = e.target.getBoundingClientRect();
     setMenuCalendarId(calendarId);
-    setMenuPosition({ x: rect.left - 150, y: rect.bottom + 5 });
+    setMenuPosition({ x: rect.right + 5, y: rect.bottom });
   };
 
   const handleEditCalendar = (calendar, e) => {
     const rect = e.target.getBoundingClientRect();
 
     setPopupPosition({
-      x: rect.right + 10,
+      x: rect.right + 5,
       y: rect.top
     });
 
@@ -93,8 +93,8 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
         </div>
         {/* Header Section */}
         <div className="header">
-          <button className="menu-item mr-4" onClick={(e) => openPopup("event", e)}>
-            <span className="menu-text gap-1">Create event </span>
+          <button className="menu-item mr-4 gap-2" onClick={(e) => openPopup("event", e)}>
+            <span className="menu-text gap-1">Create event</span>
             <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
           </button>
 
@@ -139,8 +139,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
             </Popup>
           )}
 
-
-
           <button className="mr-4 menu-item">
             <i className="fa-solid fa-gear white"></i>
           </button>
@@ -151,10 +149,10 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
         </div>
 
-        <div className="gap-2 menu-item"
+        <div className="menu-item gap-2"
         onClick={(e) => openPopup("calendar", e)}> 
-          <span className="mr-2 menu-text">Add Calendar</span>
-          <i className="fa-solid fa-plus transition-transform white"></i>
+          <span className="menu-text">Add Calendar</span>
+          <i className="fa-solid fa-plus transition-transform white ml-3"></i>
         </div>
 
         {popup === "calendar" && (

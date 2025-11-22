@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./NewEvent.css";
 
 const presetColors = [
   "#4285F4", "#DB4437", "#F4B400", "#0F9D58",
@@ -29,7 +30,7 @@ export default function EditCalendar({ calendar, onClose, onSave }) {
     <div className="event-popup">
       {/* Header */}
       <div className="popup-header">
-        <h3>Create Calendar</h3>
+        <h3>Edit Calendar</h3>
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
 

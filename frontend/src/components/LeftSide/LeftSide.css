@@ -54,6 +54,7 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   border: 1px rgb(215, 214, 227) solid;
+  gap: 2em;
 }
 
 .menu-text {
@@ -131,12 +132,14 @@
 .collapse-btn i.rotate-180 {
   transform: rotate(180deg);
 }
+
 .options{
   background-color: #d5cae985;
   border-radius: 5px;
   margin: 0.5em;
   padding:0;
 }
+
 .options li{
   list-style: none;
 }
@@ -175,17 +178,18 @@
   gap: 8px;
   padding: 10px;
   min-width: 150px;
-  background-color: white;
+  background-color: rgba(231, 243, 250, 0.918);
+  border-radius: 10px;
 }
 
-.calendar-menu .menu-item {
+.calendar-menu .calendar-menu-item {
   padding: 6px 8px;
   cursor: pointer;
-  color: white;
+  color: rgb(8, 1, 27);
 }
 
-.calendar-menu .menu-item:hover {
-  background: #f1d8d8;
+.calendar-menu .calender-menu-item:hover {
+  background-color: #473bca;
 }
 
 .calendar-menu .delete {

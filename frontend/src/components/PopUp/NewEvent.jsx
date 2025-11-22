@@ -92,7 +92,7 @@ export default function NewEvent({ onClose, onCreate }) {
         <i className="fa-solid fa-xmark close-icon" onClick={onClose}></i>
       </div>
 
-      <label>Choose calendar:</label>
+      {/* <label>Choose calendar:</label> */}
       <select value={calendarId} onChange={e => setCalendarId(e.target.value)}>
         <option value="">Select a calendar</option>
         <optgroup label="My calendars">
@@ -103,6 +103,36 @@ export default function NewEvent({ onClose, onCreate }) {
         </optgroup>
       </select>
 
+
+      <div className="popup-row">
+        {/* <label>Category</label> */}
+        {/* <select value={category} onChange={e => setCategory(e.target.value)}>
+          <option value="arrangement">Arrangement</option>
+          <option value="reminder">Reminder</option>
+          <option value="task">Task</option>
+        </select> */}
+          <button
+            className={`category-button ${category === "arrangement" ? "active" : ""}`}
+            onClick={() => setCategory("arrangement")}
+          >
+            Arrangement
+          </button>
+
+          <button
+            className={`category-button ${category === "reminder" ? "active" : ""}`}
+            onClick={() => setCategory("reminder")}
+          >
+            Reminder
+          </button>
+
+          <button
+            className={`category-button ${category === "task" ? "active" : ""}`}
+            onClick={() => setCategory("task")}
+          >
+            Task
+          </button>
+      </div>
+
       <div className="popup-row">
         <input
           type="text"
@@ -112,35 +142,26 @@ export default function NewEvent({ onClose, onCreate }) {
           onChange={e => setTitle(e.target.value)}
         />
       </div>
-
-      <div className="popup-row">
-        <label>Category</label>
-        <select value={category} onChange={e => setCategory(e.target.value)}>
-          <option value="arrangement">Arrangement</option>
-          <option value="reminder">Reminder</option>
-          <option value="task">Task</option>
-        </select>
-      </div>
-
+      
       {category === "arrangement" && (
         <>
           <div className="popup-row">
             <label>Date</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)} />
-          </div>
 
-          <div className="popup-row checkbox-row">
-            <input
-              type="checkbox"
-              checked={allDay}
-              onChange={e => {
-                setAllDay(e.target.checked);
-                if (e.target.checked) {
-                  setStartTime(""); setEndTime("");
-                }
-              }}
-            />
-            <span>All day</span>
+            <div className="popup-row checkbox-row">
+              <input
+                type="checkbox"
+                checked={allDay}
+                onChange={e => {
+                  setAllDay(e.target.checked);
+                  if (e.target.checked) {
+                    setStartTime(""); setEndTime("");
+                  }
+                }}
+              />
+              <span>All day</span>
+            </div>
           </div>
 
           {!allDay && (
@@ -148,9 +169,7 @@ export default function NewEvent({ onClose, onCreate }) {
               <div className="popup-row">
                 <label>Start time</label>
                 <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)} />
-              </div>
-
-              <div className="popup-row">
+              
                 <label>End time</label>
                 <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)} />
               </div>
@@ -160,16 +179,18 @@ export default function NewEvent({ onClose, onCreate }) {
           <div className="popup-row">
             <input
               type="text"
+              className="input-title location"
               placeholder="Location"
               value={location}
               onChange={e => setLocation(e.target.value)}
             />
           </div>
-
+          <lable>Add participants</lable>
           <div className="popup-row">
             <input
               type="text"
-              placeholder="Participants (emails, comma separated)"
+              className="input-title partisipant"
+              placeholder="emails, comma separated"
               value={participants}
               onChange={e => setParticipants(e.target.value)}
             />
@@ -194,6 +215,7 @@ export default function NewEvent({ onClose, onCreate }) {
       <div className="popup-row">
         <textarea
           placeholder="Description"
+          className="input-title"
           value={description}
           onChange={e => setDescription(e.target.value)}
         />
@@ -201,7 +223,7 @@ export default function NewEvent({ onClose, onCreate }) {
 
       <div className="popup-row">
         <label>Reminder (min)</label>
-        <input type="number" value={reminder} onChange={e => setReminder(Number(e.target.value))} />
+        <input type="number" style={{width: '8rem'}} value={reminder} onChange={e => setReminder(Number(e.target.value))} />
       </div>
 
       <button className="create-btn" onClick={handleSubmit}>Save</button>
