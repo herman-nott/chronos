@@ -3,8 +3,6 @@ import SearchView from '../ui/SearchView/SearchView';
 import CalendarSidebar from '../LeftSide/LeftSide';
 import BigCalendar from '../BigCalendar/BigCalendar';
 import NewEvent from '../PopUp/NewEvent';
-import NewTask from '../PopUp/NewTask';
-import NewAppointment from '../PopUp/NewAppointment';
 import { useState, useEffect } from 'react';
 import './Calendar.css';
 
