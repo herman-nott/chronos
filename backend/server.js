@@ -33,7 +33,6 @@ import handleCreateCalendar from "./controllers/calendar/createCalendar.js";
 import handleGetCalendars from "./controllers/calendar/getCalendars.js";
 import handleUpdateCalendar from "./controllers/calendar/updateCalendar.js";
 import handleDeleteCalendar from "./controllers/calendar/deleteCalendar.js";
-import handleShareCalendar from "./controllers/calendar/shareCalendar.js";
 import handleInviteToCalendar from "./controllers/calendar/inviteUser.js";
 // ~~~ Event ~~~
 import handleCreateEvent from "./controllers/event/createEvent.js";
@@ -83,7 +82,6 @@ async function start() {
     app.post('/api/auth/password-reset/:confirm_token', (req, res) => { handlePasswordResetConfirm(req, res, bcrypt, crypto) });
     app.post('/api/calendars', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
     app.post('/api/calendars/:calendarId/events', requireAuth, (req, res) => { handleCreateEvent(req, res) });
-    app.post('/api/calendars/:calendarId/share', requireAuth, (req, res) => { handleShareCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/invite', requireAuth, (req, res) => { handleInviteToCalendar(req, res, nodemailer) });
 
     // === PATCH Requests ===
