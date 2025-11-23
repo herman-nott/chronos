@@ -6,6 +6,7 @@ import NewEvent from '../PopUp/NewEvent';
 import Settings from '../PopUp/Settings';
 import NewCalendar from '../PopUp/NewClendar';
 import EditCalendar from '../PopUp/EditCalendar';
+import InviteUsers from '../PopUp/InviteUsers';
 
 import './LeftSide.css';
 
@@ -30,10 +31,11 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
   const [editingCalendar, setEditingCalendar] = useState(null);
   
   const [showMenu, setShowMenu] = useState(false);
+  
+  const [inviteCalendarId, setInviteCalendarId] = useState(null);
 
   useEffect(() => {
     function handleClickOutside(event) {
-      // получаем меню по его уникальному ID
       if (menuCalendarId) {
         const menuEl = document.getElementById(`calendar-menu-${menuCalendarId}`);
         if (menuEl && !menuEl.contains(event.target)) {
@@ -96,6 +98,8 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
     const rect = e.target.getBoundingClientRect();
     setPopup(view);
     setPopupPosition({ x: rect.right + 10, y: rect.top });
+    setInviteCalendarId(menuCalendarId);
+    setShowMenu(false);
   };
 
   useEffect(() => {
@@ -177,6 +181,17 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                       setPopup(null);
                     });
                 }}
+              />
+            </Popup>
+          )}
+          
+          {console.log(inviteCalendarId)}
+
+          {popup === "invite" && (
+            <Popup position={popupPosition} onClose={() => setPopup(null)}>
+              <InviteUsers
+                calendarId={inviteCalendarId}
+                onClose={() => { setPopup(null); setMenuCalendarId(null); setShowMenu(false); }}
               />
             </Popup>
           )}
@@ -284,7 +299,10 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
 
                                 <div 
                                   className="calendar-menu-item" 
-                                  // onClick={() => handleInvite(menuCalendarId)}
+                                  onClick={(e) => {
+                                    openPopup('invite', e);
+                                    setMenuCalendarId(null); 
+                                  }}
                                 >
                                   Invite people
                                 </div>

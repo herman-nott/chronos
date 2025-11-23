@@ -33,11 +33,14 @@ import handleCreateCalendar from "./controllers/calendar/createCalendar.js";
 import handleGetCalendars from "./controllers/calendar/getCalendars.js";
 import handleUpdateCalendar from "./controllers/calendar/updateCalendar.js";
 import handleDeleteCalendar from "./controllers/calendar/deleteCalendar.js";
+import handleInviteToCalendar from "./controllers/calendar/inviteUser.js";
 // ~~~ Event ~~~
 import handleCreateEvent from "./controllers/event/createEvent.js";
 import handleGetEvents from "./controllers/event/getEvents.js";
 import handleUpdateEvent from "./controllers/event/updateEvent.js";
 import handleDeleteEvent from "./controllers/event/deleteEvent.js";
+// ~~~ User ~~~
+import handleSearchUsers from "./controllers/user/searchUsers.js";
 
 // middleware
 import requireAuth from "./middleware/requireAuth.js";
@@ -68,6 +71,7 @@ async function start() {
     });
     app.get('/api/calendars', requireAuth, (req, res) => { handleGetCalendars(req, res) });
     app.get('/api/events/:calendarId', requireAuth, (req, res) => { handleGetEvents(req, res) });
+    app.get('/api/users/search', requireAuth, (req, res) => { handleSearchUsers(req, res) });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });
@@ -78,6 +82,7 @@ async function start() {
     app.post('/api/auth/password-reset/:confirm_token', (req, res) => { handlePasswordResetConfirm(req, res, bcrypt, crypto) });
     app.post('/api/calendars', requireAuth, (req, res) => { handleCreateCalendar(req, res) });
     app.post('/api/calendars/:calendarId/events', requireAuth, (req, res) => { handleCreateEvent(req, res) });
+    app.post('/api/calendars/:calendarId/invite', requireAuth, (req, res) => { handleInviteToCalendar(req, res, nodemailer) });
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
