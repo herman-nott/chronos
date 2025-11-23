@@ -5,11 +5,8 @@ export default function MonthView({
   onDateChange, 
   currentDate, 
   events = [], 
-  tasks = [], 
-  appointments = [], 
-  onEventClick, 
-  onTaskClick, 
-  onAppointmentClick 
+  onEventClick,
+  onTimeSlotClick
 }) {
   useEffect(() => {
     onDateChange({
@@ -33,23 +30,29 @@ export default function MonthView({
     "July", "August", "September", "October", "November", "December"
   ];
 
-  // Get all items (events, tasks, appointments) for a specific day
   const getItemsForDay = (day, month, year) => {
-    const filterByDate = (arr, dateField = 'start_time') => arr.filter(item => {
-      const itemDate = new Date(item[dateField]);
+    return events.filter(event => {
+      let compareDate;
+      
+      // Use appropriate date field based on category
+      if (event.category === 'task') {
+        compareDate = new Date(event.due_date);
+      } else if (event.category === 'reminder') {
+        compareDate = new Date(event.reminder_time);
+      } else { // arrangement
+        compareDate = new Date(event.start_time);
+      }
+      
       return (
-        itemDate.getDate() === day &&
-        itemDate.getMonth() === month &&
-        itemDate.getFullYear() === year
+        compareDate.getDate() === day &&
+        compareDate.getMonth() === month &&
+        compareDate.getFullYear() === year
       );
+    }).sort((a, b) => {
+      const aDate = a.start_time || a.due_date || a.reminder_time;
+      const bDate = b.start_time || b.due_date || b.reminder_time;
+      return new Date(aDate) - new Date(bDate);
     });
-
-    // Combine all items with type identifiers
-    return [
-      ...filterByDate(events).map(e => ({ ...e, type: 'event' })),
-      ...filterByDate(tasks, 'due_date').map(t => ({ ...t, type: 'task', start_time: t.due_date })),
-      ...filterByDate(appointments).map(a => ({ ...a, type: 'appointment' }))
-    ].sort((a, b) => new Date(a.start_time) - new Date(b.start_time)); // Sort by time
   };
 
   // Generate all days dynamically for the current month
@@ -106,15 +109,8 @@ export default function MonthView({
 
   const days = getDays();
 
-  // Handle item click based on type
   const handleItemClick = (item) => {
-    if (item.type === 'event' && onEventClick) {
-      onEventClick(item);
-    } else if (item.type === 'task' && onTaskClick) {
-      onTaskClick(item);
-    } else if (item.type === 'appointment' && onAppointmentClick) {
-      onAppointmentClick(item);
-    }
+    onEventClick(item);
   };
 
   return (
@@ -143,15 +139,17 @@ export default function MonthView({
                 {dayObj.items.length === 0 ? (
                   <span className="empty-slot"></span>
                 ) : (
-                  dayObj.items.slice(0, 3).map((item) => (
+                  dayObj.items.slice(0, 3).map((event) => (
                     <div
-                      key={item._id}
-                      className={`event-slot ${item.type}`}
-                      onClick={() => handleItemClick(item)}
-                      title={`${item.title}${item.description ? '\n' + item.description : ''}`}
+                      key={event._id}
+                      className={`event-slot ${event.category}`}
+                      onClick={() => handleItemClick(event)}
+                      title={`${event.title}${event.description ? '\n' + event.description : ''}`}
                     >
                       <span className="event-time">
-                        {new Date(item.start_time).toLocaleTimeString('en-US', {
+                        {new Date(
+                          event.start_time || event.due_date || event.reminder_time
+                        ).toLocaleTimeString('en-US', {
                           hour: 'numeric',
                           minute: '2-digit',
                           hour12: true

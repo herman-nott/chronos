@@ -4,6 +4,7 @@ import './Register.css'
 
 function Register() {
   const navigate = useNavigate();
+   
   const [login, setlogin] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -37,7 +38,7 @@ function Register() {
   function onLastnameChange(event) {
     setLastname(event.target.value);
   }
-   
+
   function onCountryChange(event) {
     setCountry(event.target.value);
   }
@@ -66,7 +67,7 @@ function Register() {
       clearTimeout(loaderTimeout);
 
       if (data.error) {
-        setError(data.error);
+        setError(data.error); // ошибка от сервера
       } else {
         setError('');
         // setMessage(`Password reset email sent to ${email}`);
@@ -178,6 +179,13 @@ function Register() {
             </div>
 
             <div className="">
+              {/* <input 
+                className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" 
+                id="register-bnt" 
+                type="submit" 
+                value="Login" 
+                onClick={onSubmitRegister} 
+              /> */}
             <p className="f6 link dim black db pointer underline" onClick={() => navigate('/login')}>Login</p>
             </div>
           </div>
@@ -190,11 +198,14 @@ function Register() {
         </div>
       )}
         
+
       {error && (
         <p style={{ color: 'red', fontWeight: 'bold' }}> 
           &#10006; {error}
         </p>
       )}
+        
+    
     </div>
   );
 }

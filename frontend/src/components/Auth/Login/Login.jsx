@@ -58,7 +58,7 @@ function Login({ onLoginSuccess }) {
         return;
       }
 
-      fetch(`${API_URL}/api/auth/password-reset`, {
+      fetch(`${API_URL}/auth/password-reset`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
@@ -90,7 +90,7 @@ function Login({ onLoginSuccess }) {
 
 
   return (
-    <div className='center-container login-container h-100 no-scroll'>
+    <div className='center-container login-container no-scroll'>
       <div className={`forms-wrapper ${isResetting ? 'resetting' : ''}`}>
         <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-35-l mw6 center shadow-5 blur-card login-form" ref={loginRef}>
           <main className="pa4 black-80">

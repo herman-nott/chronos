@@ -10,30 +10,25 @@ import InviteUsers from '../PopUp/InviteUsers';
 
 import './LeftSide.css';
 
-const LeftSide = ({ onDataCreated, onDaySelect }) => {
+const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) => {
   const [myCalendarsOpen, setMyCalendarsOpen] = useState(true);
   const [otherCalendarsOpen, setOtherCalendarsOpen] = useState(true);
-  const [newCalendarOpen, setNewCalendarOpen] = useState(false);
-  const [newEventOpen, setNewEventOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(false);
-  // const [isCheked, setCheck] = useState(false);
 
   const [myCalendars, setMyCalendars] = useState([]);
   const [otherCalendars, setOtherCalendars] = useState([]);
 
   const [popup, setPopup] = useState(null);
-  const [popupPosition, setPopupPosition] = useState({ x: 0, y: 0 });
+  const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
 
   const [visibleCalendars, setVisibleCalendars] = useState({});
 
-  const [menuCalendarId, setMenuCalendarId] = useState(null);  
-  
+  const [menuCalendarId, setMenuCalendarId] = useState(null);
   const [editingCalendar, setEditingCalendar] = useState(null);
-  
   const [showMenu, setShowMenu] = useState(false);
-  
   const [inviteCalendarId, setInviteCalendarId] = useState(null);
 
+  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event) {
       if (menuCalendarId) {
@@ -51,6 +46,14 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
     };
   }, [menuCalendarId]);
 
+  const openPopup = (view, e) => {
+    const rect = e.target.getBoundingClientRect();
+    setPopup(view);
+    setPopupPosition({ x: rect.right + 10, y: rect.top });
+    setInviteCalendarId(menuCalendarId);
+    setShowMenu(false);
+  };
+
   const openCalendarMenu = (calendarId, e) => {
     e.stopPropagation();
     setMenuCalendarId(calendarId);
@@ -58,12 +61,10 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
 
   const handleEditCalendar = (calendar, e) => {
     const rect = e.target.getBoundingClientRect();
-
     setPopupPosition({
       x: rect.right + 5,
       y: rect.top
     });
-
     setEditingCalendar(calendar);
     setPopup("edit-calendar");
   };
@@ -82,7 +83,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
       .then(() => {
         setMyCalendars(prev => prev.filter(c => c._id !== calendarId));
         setOtherCalendars(prev => prev.filter(c => c._id !== calendarId));
-
         setMenuCalendarId(null);
         setPopup(null);
         setShowMenu(false);
@@ -93,15 +93,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
       });
   };
 
-
-  const openPopup = (view, e) => {
-    const rect = e.target.getBoundingClientRect();
-    setPopup(view);
-    setPopupPosition({ x: rect.right + 10, y: rect.top });
-    setInviteCalendarId(menuCalendarId);
-    setShowMenu(false);
-  };
-
   useEffect(() => {
     fetch("http://localhost:3000/api/calendars", {
       method: "GET",
@@ -109,20 +100,28 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
     })
       .then(async response => response.json())
       .then(data => {
-        setMyCalendars(data.myCalendars);
-        setOtherCalendars(data.otherCalendars);
+        setMyCalendars(data.myCalendars || []);
+        setOtherCalendars(data.otherCalendars || []);
 
         const visibility = {};
-        [...data.myCalendars, ...data.otherCalendars].forEach(c => {
+        [...(data.myCalendars || []), ...(data.otherCalendars || [])].forEach(c => {
           visibility[c._id] = c.is_visible ?? true;
         });
         setVisibleCalendars(visibility);
-      });
+      })
+      .catch(err => console.error("Failed to fetch calendars:", err));
   }, []);
+
+  const handleEventCreated = (data) => {
+    console.log("EVENT CREATED:", data);
+    setPopup(null);
+    if (onDataCreated) {
+      onDataCreated('event', data);
+    }
+  };
   
   return (
     <div className={`left-side ${collapsed ? 'collapsed' : ''}`}>
-      {/* Collapse/Expand Button */}
       <button
         className="collapse-btn"
         onClick={() => setCollapsed(!collapsed)}
@@ -134,14 +133,13 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
       <div className="left-side-container">
         <div className='logo'>
           <img src="../src/assets/images/logo.svg" alt='logo' className='logo-pick white'></img>
-          <h1>Chronos</h1>
+          <h1>Calendar</h1>
         </div>
 
-        {/* Header Section */}
-        <div className="header">
-          <button className="menu-item mr-4 gap-2" onClick={(e) => openPopup("event", e)}>
-            <span className="menu-text gap-1">Create event</span>
-            <i className={`fa-solid fa-chevron-right ${newEventOpen ? 'rotate-0' : 'rotate-180'} white`}></i>
+        <div className="header mt-5">
+          <button className="menu-item mr-4" onClick={(e) => openPopup("event", e)}>
+            <span className="menu-text gap-1">Create event </span>
+            <i className="fa-solid fa-chevron-right white"></i>
           </button>
 
           {popup === "event" && (
@@ -149,14 +147,7 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
               <NewEvent
                 calendarId={myCalendars[0]?._id}
                 onClose={() => setPopup(null)}
-                onEventCreated={(data) => {
-                  console.log("EVENT CREATED:", data);
-                  setPopup(null);
-                  // Call generic callback if provided
-                  if (onDataCreated) {
-                    onDataCreated('event', data);
-                  }
-                }}
+                onEventCreated={handleEventCreated}
               />
             </Popup>
           )}
@@ -184,8 +175,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
               />
             </Popup>
           )}
-          
-          {console.log(inviteCalendarId)}
 
           {popup === "invite" && (
             <Popup position={popupPosition} onClose={() => setPopup(null)}>
@@ -202,26 +191,23 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
           </button>
         </div>
 
-          {popup === "settings" && (
-            <Popup position={popupPosition} onClose={() => setPopup(null)}>
-              <Settings
-                onClose={() => setPopup(null)}
-                onEventCreated={(data) => {
-                }}
-              />
-            </Popup>
-          )}
+        {popup === "settings" && (
+          <Popup position={popupPosition} onClose={() => setPopup(null)}>
+            <Settings
+              onClose={() => setPopup(null)}
+              onEventCreated={(data) => {
+              }}
+            />
+          </Popup>
+        )}
 
-
-        {/* Mini Calendar */}
         <div className="smallCalendar">
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
         </div>
 
-        <div className="menu-item gap-2"
-        onClick={(e) => openPopup("calendar", e)}> 
-          <span className="menu-text">Add Calendar</span>
-          <i className="fa-solid fa-plus transition-transform white ml-3"></i>
+        <div className="gap-2" onClick={(e) => openPopup("calendar", e)}> 
+          <span className="mr-2">Add Calendar</span>
+          <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
 
         {popup === "calendar" && (
@@ -230,7 +216,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
               onClose={() => setPopup(null)}
               onCreate={(data) => {
                 console.log("CALENDAR CREATED:", data);
-                // send to backend
                 fetch("http://localhost:3000/api/calendars", {
                   method: "POST",
                   credentials: "include",
@@ -240,13 +225,17 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                   .then(res => res.json())
                   .then(newCalendar => {
                     setMyCalendars(prev => [...prev, newCalendar]);
+                    setPopup(null);
+                  })
+                  .catch(err => {
+                    console.error("Failed to create calendar:", err);
+                    alert("Failed to create calendar");
                   });
               }}
             />
           </Popup>
         )}
 
-        {/* Calendar Lists */}
         {!collapsed && (
           <div className="calendar-section">
             {/* My Calendars */}
@@ -268,19 +257,24 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                         color={calendar.color}
                         checked={visibleCalendars[calendar._id]}
                         onChange={() => {
-                          setVisibleCalendars(prev => ({
-                            ...prev,
-                            [calendar._id]: !prev[calendar._id]
-                          }));
+                          const newVisibility = {
+                            ...visibleCalendars,
+                            [calendar._id]: !visibleCalendars[calendar._id]
+                          };
+                          setVisibleCalendars(newVisibility);
+                          if (onCalendarVisibilityChange) {
+                            onCalendarVisibilityChange(newVisibility);
+                          }
                         }}
                       />
+                      {/* Only show menu for non-primary calendars */}
                       {calendar._id !== myCalendars[0]?._id && (
-                        <div style={{display: 'flex'}}>
+                        <div style={{display: 'flex', position: 'relative'}}>
                           <i
                             className="fa-solid fa-ellipsis-vertical calendar-arrow pointer"
                             onClick={(e) => {openCalendarMenu(calendar._id, e); setShowMenu(!showMenu)}}
                           ></i>
-                          {menuCalendarId && showMenu && (
+                          {menuCalendarId === calendar._id && showMenu && (
                             <div
                               id={`calendar-menu-${menuCalendarId}`}
                               style={{position: 'absolute', zIndex: 1000, marginLeft: '1rem'}}
@@ -289,7 +283,6 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                                 <div 
                                   className="calendar-menu-item" 
                                   onClick={(e) => {
-                                    const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === menuCalendarId);
                                     handleEditCalendar(calendar, e);
                                     setMenuCalendarId(null);
                                   }}
@@ -339,14 +332,18 @@ const LeftSide = ({ onDataCreated, onDaySelect }) => {
                     <div className="calendar-item" key={calendar._id}>
                       <CheckBox
                         text={calendar.title}
-                        id={`my-${calendar._id}`}
+                        id={`other-${calendar._id}`}
                         color={calendar.color}
                         checked={visibleCalendars[calendar._id]}
                         onChange={() => {
-                          setVisibleCalendars(prev => ({
-                            ...prev,
-                            [calendar._id]: !prev[calendar._id]
-                          }));
+                          const newVisibility = {
+                            ...visibleCalendars,
+                            [calendar._id]: !visibleCalendars[calendar._id]
+                          };
+                          setVisibleCalendars(newVisibility);
+                          if (onCalendarVisibilityChange) {
+                            onCalendarVisibilityChange(newVisibility);
+                          }
                         }}
                       />
                     </div>

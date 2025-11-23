@@ -33,10 +33,8 @@ async function handlePasswordReset(req, res, crypto, nodemailer) {
         });
 
         // формирование ссылки сброса пароля
-        // const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000/api/auth';
-        // const resetLink = `${FRONTEND_URL}/password-reset/${confirm_token}`;
-
-        const resetLink = `http://localhost:5173/password-reset/${confirm_token}`;
+        const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000/api/auth';
+        const resetLink = `${FRONTEND_URL}/password-reset/${confirm_token}`;
 
         try {
             const transporter = nodemailer.createTransport({

@@ -5,7 +5,7 @@
   position: relative;
   border-right: 1px solid #5b389e;
   height: 100%;
-  margin-left: 2%; 
+  margin-left: 2em; 
 }
 
 .left-side-container {
@@ -23,7 +23,8 @@
   justify-content: flex-start;
   align-items: center;
   gap: 1rem;
-  margin: 1em 10% 0.5rem 0;
+  margin-bottom: 0.5rem;
+  margin-top: 1em;
 }
 
 .logo {
@@ -33,6 +34,7 @@
   color: white;
   margin-left: 0.75rem;
   display: flex;
+  justify-content: center;
   align-items: center;
 }
 
@@ -42,7 +44,6 @@
   color: white;
   filter: brightness(0) invert(1);
 }
-
 .menu-item {
   /* display: none; */
   width: fit-content;
@@ -54,7 +55,6 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
   border: 1px rgb(215, 214, 227) solid;
-  gap: 2em;
 }
 
 .menu-text {
@@ -102,7 +102,6 @@
   justify-content: space-between;
   align-items: start;
   width: 90%;
-  color: aliceblue;
   padding-left: 0.5rem;
   padding-top: 0.25rem;
   inset: -1em;
@@ -132,14 +131,12 @@
 .collapse-btn i.rotate-180 {
   transform: rotate(180deg);
 }
-
 .options{
   background-color: #d5cae985;
   border-radius: 5px;
   margin: 0.5em;
   padding:0;
 }
-
 .options li{
   list-style: none;
 }
@@ -150,17 +147,13 @@
     flex-shrink: 0;
     margin-bottom: 0;
   }
-
   .left-side-container {
     padding: 0;
   }
-
   .header {
     flex-direction: row;
-    justify-content: space-between;
-
+    justify-content: space-around;
   }
-
   .left-side.collapsed {
     width: 50px;
   }
@@ -172,24 +165,25 @@
   }
 }
 
+
 .calendar-menu {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  background: #1d1d1d;
+  border: 1px solid #444;
   padding: 10px;
-  min-width: 200px;
-  background-color: rgb(231, 243, 250);
-  border-radius: 10px;
+  border-radius: 6px;
+  min-width: 150px;
 }
 
-.calendar-menu .calendar-menu-item {
+.calendar-menu .menu-item {
   padding: 6px 8px;
   cursor: pointer;
-  color: rgb(8, 1, 27);
+  color: white;
 }
 
-.calendar-menu .calender-menu-item:hover {
-  background-color: #473bca;
+.calendar-menu .menu-item:hover {
+  background: #333;
 }
 
 .calendar-menu .delete {
@@ -199,7 +193,4 @@
 .calendar-menu .disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-.checkbox-label{
-  color: rgb(228, 225, 225);
 }

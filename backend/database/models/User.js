@@ -26,10 +26,6 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         default: 'UTC' 
     },
-    country: {
-        type: String,
-        default: null
-    },
     calendars: [{ 
         type: mongoose.Schema.Types.ObjectId, 
         ref: 'Calendar' 

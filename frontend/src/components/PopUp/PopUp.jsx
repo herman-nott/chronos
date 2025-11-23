@@ -1,4 +1,3 @@
-// Popup.jsx
 import { useEffect } from 'react';
 import "./Popup.css";
 

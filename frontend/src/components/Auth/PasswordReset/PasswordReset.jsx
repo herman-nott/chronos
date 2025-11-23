@@ -1,13 +1,10 @@
 import { useState } from 'react'
-import { useParams } from 'react-router-dom';
 
-function PasswordResetWithTocken() {
+function PasswordReset({ token }) {
     const [password, setPassword] = useState('');
     const [passwordConfirmation, setPasswordConfirmation] = useState('');
     const [error, setError] = useState('');
     const [message, setMessage] = useState('');
-
-    const { token } = useParams();
 
     function onPasswordChange(event) {
         setPassword(event.target.value);
@@ -99,4 +96,4 @@ function PasswordResetWithTocken() {
     );
 }
 
-export default PasswordResetWithTocken;
+export default PasswordReset;

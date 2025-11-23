@@ -84,7 +84,6 @@
   color: var(--text-white);
 } */
 
-
 .week-day-header{
   background-color: #edf1f8;
   /* width: calc(65vw/8); */
@@ -92,6 +91,6 @@
   padding: 0 1em;
 }
 
-.event-block.event { background-color: #2196F3; }
+.event-block.reminder { background-color: #2196F3; }
 .event-block.task { background-color: #4CAF50; }
-.event-block.appointment { background-color: #FF9800; }
+.event-block.arrangement { background-color: #FF9800; }

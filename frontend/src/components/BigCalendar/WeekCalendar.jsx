@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './WeekCalendar.css';
 
 export default function WeekView({ onDateChange, currentDate, events = [], tasks = [], appointments = [], onTimeSlotClick, onEventClick, onTaskClick, onAppointmentClick }) {
-   const [popup, setPopup] = useState(null);
+  const [popup, setPopup] = useState(null);
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -32,37 +32,34 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
 
   // Filter events for this week
   const getItemsForDay = (day) => {
-    const filterByDate = (arr) => arr.filter(item => {
-      const itemDate = new Date(item.start_time);
+    return events.filter(event => {
+      let compareDate;
+      
+      if (event.category === 'task') {
+        compareDate = new Date(event.due_date);
+      } else if (event.category === 'reminder') {
+        compareDate = new Date(event.reminder_time);
+      } else {
+        compareDate = new Date(event.start_time);
+      }
+      
       return (
-        itemDate.getDate() === day.getDate() &&
-        itemDate.getMonth() === day.getMonth() &&
-        itemDate.getFullYear() === day.getFullYear()
+        compareDate.getDate() === day.getDate() &&
+        compareDate.getMonth() === day.getMonth() &&
+        compareDate.getFullYear() === day.getFullYear()
       );
     });
-
-    return [
-      ...filterByDate(events).map(e => ({ ...e, type: 'event' })),
-      ...filterByDate(
-        tasks.map(t => ({
-          ...t,
-          type: 'task',
-          start_time: t.due_date,
-        }))
-      ),
-      ...filterByDate(appointments).map(a => ({ ...a, type: 'appointment' })),
-    ];
   };
 
   const getItemsForTimeSlot = (timeSlot, dayIndex) => {
     const day = weekDays[dayIndex];
     const items = getItemsForDay(day);
-
     const slotHour = parseTimeSlot(timeSlot);
 
-    return items.filter(item => {
-      const itemHour = new Date(item.start_time).getHours();
-      return itemHour === slotHour;
+    return items.filter(event => {
+      const eventDate = event.start_time || event.due_date || event.reminder_time;
+      const eventHour = new Date(eventDate).getHours();
+      return eventHour === slotHour;
     });
   };
 
@@ -95,13 +92,6 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
       }
       return newSet;
     });
-    openPopup("event", e);
-  };
-
-  const openPopup = (view, e) => {
-    const rect = e.target.getBoundingClientRect();
-    setPopup(view);
-    setPopupPosition({ x: rect.right + 10, y: rect.top });
   };
 
   const renderTimeBlocks = (timeSlot) => {
@@ -119,20 +109,18 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
           onClick={() => handleCellClick(timeSlot, dayIndex)}
         >
-          {cellItems.map(item => (
+          {cellItems.map(event => (
             <div
-              key={item._id}
-              className={`event-block ${item.type}`} // CSS can color differently
+              key={event._id}
+              className={`event-block ${event.category}`}
               onClick={(e) => {
                 e.stopPropagation();
-                if(item.type === 'event') onEventClick?.(item);
-                if(item.type === 'task') onTaskClick?.(item);
-                if(item.type === 'appointment') onAppointmentClick?.(item);
+                onEventClick?.(event);
               }}
-              title={`${item.title}\n${item.description || ''}`}
+              title={`${event.title}\n${event.description || ''}`}
             >
-              <div className="event-title">{item.title}</div>
-              {item.location && <div className="event-location">{item.location}</div>}
+              <div className="event-title">{event.title}</div>
+              {event.location && <div className="event-location">{event.location}</div>}
             </div>
           ))}
         </div>

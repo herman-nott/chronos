@@ -4,11 +4,7 @@ export default function DayView({
   onDateChange, 
   currentDate, 
   events = [], 
-  tasks = [], 
-  appointments = [], 
   onEventClick, 
-  onTaskClick, 
-  onAppointmentClick,
   onTimeSlotClick 
 }) {
   const [selectedCells, setSelectedCells] = useState(new Set());
@@ -21,36 +17,34 @@ export default function DayView({
     });
   }, [currentDate]); 
 
-  // Get all items (events, tasks, appointments) -- for the current day
   const getItemsForDay = () => {
-    const filterByDate = (arr, dateField = 'start_time') => arr.filter(item => {
-      const itemDate = new Date(item[dateField]);
+    return events.filter(event => {
+      let compareDate;
+      
+      if (event.category === 'task') {
+        compareDate = new Date(event.due_date);
+      } else if (event.category === 'reminder') {
+        compareDate = new Date(event.reminder_time);
+      } else {
+        compareDate = new Date(event.start_time);
+      }
+      
       return (
-        itemDate.getDate() === currentDate.getDate() &&
-        itemDate.getMonth() === currentDate.getMonth() &&
-        itemDate.getFullYear() === currentDate.getFullYear()
+        compareDate.getDate() === currentDate.getDate() &&
+        compareDate.getMonth() === currentDate.getMonth() &&
+        compareDate.getFullYear() === currentDate.getFullYear()
       );
     });
-
-    return [
-      ...filterByDate(events).map(e => ({ ...e, type: 'event' })),
-      ...filterByDate(tasks, 'due_date').map(t => ({ 
-        ...t, 
-        type: 'task', 
-        start_time: t.due_date 
-      })),
-      ...filterByDate(appointments).map(a => ({ ...a, type: 'appointment' }))
-    ];
   };
 
-  // Get items for a specific time slot
   const getItemsForTimeSlot = (timeSlot) => {
     const items = getItemsForDay();
     const slotHour = parseTimeSlot(timeSlot);
 
-    return items.filter(item => {
-      const itemHour = new Date(item.start_time).getHours();
-      return itemHour === slotHour;
+    return items.filter(event => {
+      const eventDate = event.start_time || event.due_date || event.reminder_time;
+      const eventHour = new Date(eventDate).getHours();
+      return eventHour === slotHour;
     });
   };
 
@@ -84,15 +78,10 @@ export default function DayView({
     });
   };
 
-  // Handle item click based on type
   const handleItemClick = (item, e) => {
     e.stopPropagation();
-    if (item.type === 'event' && onEventClick) {
+    if (onEventClick) {
       onEventClick(item);
-    } else if (item.type === 'task' && onTaskClick) {
-      onTaskClick(item);
-    } else if (item.type === 'appointment' && onAppointmentClick) {
-      onAppointmentClick(item);
     }
   };
 
@@ -111,15 +100,15 @@ export default function DayView({
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
           onClick={() => handleCellClick(timeSlot, dayIndex)}
         >
-          {cellItems.map(item => (
+          {cellItems.map(event => (
             <div
-              key={item._id}
-              className={`event-block ${item.type}`}
-              onClick={(e) => handleItemClick(item, e)}
-              title={`${item.title}\n${item.description || ''}`}
+              key={event._id}
+              className={`event-block ${event.category}`}
+              onClick={(e) => handleItemClick(event, e)}
+              title={`${event.title}\n${event.description || ''}`}
             >
-              <div className="event-title">{item.title}</div>
-              {item.location && <div className="event-location">{item.location}</div>}
+              <div className="event-title">{event.title}</div>
+              {event.location && <div className="event-location">{event.location}</div>}
             </div>
           ))}
         </div>

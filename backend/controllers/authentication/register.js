@@ -3,14 +3,14 @@ import Calendar from "../../database/models/Calendar.js";
 import EmailVerification from "../../database/models/EmailVerification.js";
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
-    const { login, password, password_confirmation, firstname, lastname, email, country } = req.body;
+    const { login, password, password_confirmation, firstname, lastname, email } = req.body;
 
     try {
         if (password !== password_confirmation) {
             return res.status(400).json({ error: "Passwords don't match" });
         }
 
-        if (!login || !email || !password || !password_confirmation || !country) {
+        if (!login || !email || !password || !password_confirmation) {
             return res.status(400).json({ error: "Please fill in all required fields" });
         }
 
@@ -42,7 +42,6 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             userToUpdate.password_hash = hash;
             userToUpdate.full_name = `${firstname} ${lastname}`;
             userToUpdate.email = email;
-            userToUpdate.country = country;
             userToUpdate.updatedAt = new Date();
 
             newUser = await userToUpdate.save();
@@ -54,7 +53,6 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 email,
                 locale: "en-US",
                 timezone: "UTC",
-                country: country,
                 calendars: [],
                 is_email_confirmed: false
             });
@@ -62,7 +60,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
 
         const defaultCalendar = await Calendar.create({
             owner: newUser._id,
-            title: `Main calendar`,
+            title: `@${newUser.login}'s calendar`,
             color: "#2196F3",
             is_visible: true,
             members: []

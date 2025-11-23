@@ -13,7 +13,7 @@ async function handleGetCalendars(req, res) {
         const otherCalendars = await Calendar.find({ 
             members: userId,
             owner: { $ne: userId }
-        });
+        });        
 
         return res.status(200).json({
             myCalendars,
