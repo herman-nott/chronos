@@ -59,23 +59,21 @@
 
 .calendar-grid ul {
   display: flex;
-  flex-wrap: wrap;
   list-style: none;
   text-align: center;
   margin: 0;
   padding: 0;
+  width: 100%;
 }
 
-.calendar-grid .weeks li {
+.time-row .week {
+  margin-left: 1rem;
+}
+
+.calendar-grid .week li {
   color: #333;
   font-size: 1.5em;
-}
-
-.calendar-grid .weeks {
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  width: 90%;
+  width: calc(100%7);
 }
 
 /* .calendar-grid .weeks span {
@@ -85,8 +83,6 @@
 } */
 
 .week-day-header{
-  background-color: #edf1f8;
-  /* width: calc(65vw/8); */
   margin: 0;
   padding: 0 1em;
 }

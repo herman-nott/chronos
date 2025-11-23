@@ -83,8 +83,8 @@ function Register() {
 
   return (
     <div className='center-container mt6'>
-      <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-35-l mw6 center shadow-5 blur-card">
-        <main className="pa4 black-80">
+      <article className="br3 ba b--black-10 mv6 w-100 w-50-m w-35-l mw6 center shadow-5 blur-card">
+        <main className="register-main pa4 black-80">
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
@@ -93,7 +93,7 @@ function Register() {
                   <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="login">Login <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
-                        className="pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100" 
+                        className="pa2 input-reset ba b--black bg-transparent w-100" 
                         type="text" 
                         name="login" 
                         id="login" 
@@ -104,7 +104,7 @@ function Register() {
                   <div className="mv3">
                     <label className="db fw6 lh-copy f6" htmlFor="password">Password <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
-                      className="b pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100" 
+                      className="b pa2 input-reset ba b--black bg-transparent w-100" 
                       type="password" 
                       name="password" 
                       id="password" 
@@ -115,11 +115,21 @@ function Register() {
                   <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="first-name">First name</label>
                     <input 
-                      className="pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100" 
+                      className="pa2 input-reset ba b--black bg-transparent w-100" 
                       type="text" 
                       name="first-name" 
                       id="first-name" 
                       onChange={onFirstnameChange}
+                    />
+                  </div>
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
+                    <input 
+                      className="pa2 input-reset ba b--black bg-transparent w-100"
+                      type="text" 
+                      name="last-name" 
+                      id="last-name" 
+                      onChange={onLastnameChange}
                     />
                   </div>
                 </div>
@@ -128,7 +138,7 @@ function Register() {
                   <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
-                      className="pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100" 
+                      className="pa2 input-reset ba b--black bg-transparent w-100" 
                       type="email" 
                       name="email" 
                       id="email" 
@@ -139,7 +149,7 @@ function Register() {
                   <div className="mv3">
                     <label className="db fw6 lh-copy f6" htmlFor="password-confirmation">Password Confirmation <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
-                      className="b pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100" 
+                      className="b pa2 input-reset ba b--black bg-transparent w-100" 
                       type="password" 
                       name="password-confirmation" 
                       id="password-confirmation" 
@@ -147,19 +157,10 @@ function Register() {
                       onChange={onPasswordConfirmationChange}
                     />
                   </div>
-                  <div className="mt3">
-                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
-                    <input 
-                      className="pa2 input-reset ba b--black bg-transparent hover-bg-black hover-white w-100"
-                      type="text" 
-                      name="last-name" 
-                      id="last-name" 
-                      onChange={onLastnameChange}
-                    />
-                  </div>
+
                   <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
-                    <select value={country} onChange={e => onCountryChange(e.target.value)}>
+                    <select value={country} onChange={e => onCountryChange(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
                       <option value="DE">Germany</option>
                       <option value="UA">Ukraine</option>
                     </select>

@@ -1,3 +1,11 @@
+.register-main {
+  width: fit-content;
+  max-height: 63vh;
+  padding: 20px;
+
+  overflow-y: auto;
+  scrollbar-width: none;
+}
 .loader-container {
   position: fixed;
   top: 0;

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import './WeekCalendar.css';
 
-export default function WeekView({ onDateChange, currentDate, events = [], tasks = [], appointments = [], onTimeSlotClick, onEventClick, onTaskClick, onAppointmentClick }) {
+export default function WeekView({ onDateChange, currentDate, events = [], tasks = [], appointments = [], onTimeSlotClick, onEventClick, onTaskClick, onAppointmentClick, settings = { timeFormat: "24" } }) {
   const [popup, setPopup] = useState(null);
   useEffect(() => {
     onDateChange({
@@ -65,13 +65,17 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
 
   // Parse time slot like "9AM" to hour number
   const parseTimeSlot = (slot) => {
-    const isPM = slot.includes('PM');
-    const hour = parseInt(slot.replace(/[AP]M/, ''));
-    
+  if (settings.timeFormat === "24") {
+    return Number(slot); // slot is already "0"…"23"
+  } else {
+    const isPM = slot.includes("PM");
+    const hour = parseInt(slot.replace(/[AP]M/, ""));
+
     if (isPM && hour !== 12) return hour + 12;
     if (!isPM && hour === 12) return 0;
     return hour;
-  };
+  }
+};
 
   const handleCellClick = (timeSlot, dayIndex) => {
     if (onTimeSlotClick) {
@@ -130,33 +134,40 @@ export default function WeekView({ onDateChange, currentDate, events = [], tasks
     return <div className="time-blocks">{blocks}</div>;
   };
 
-  const hrs = [
-    ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
-    '12PM',
-    ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
-  ];
+  const hrs = settings.timeFormat === "24"
+  ? Array.from({ length: 24 }, (_, i) => i)  // 0–23
+  : [
+      ...Array.from({ length: 11 }, (_, i) => `${i + 1}AM`),
+      "12PM",
+      ...Array.from({ length: 11 }, (_, i) => `${i + 1}PM`)
+    ];
 
   return (
     <>
       <div className="calendar-container">
         <div className="calendar-grid">
-          <ul className="weeks">
-            <li className='time-label mr-2' ></li>
-            {weekDays.map((day, index) => (
-              <li className='calendar-cell' key={index}>
-                <div className="week-day-header">
-                  <div className="day-name">
-                    {day.toLocaleDateString('en-US', { weekday: 'short' })}
+          <div className="time-row">
+            <span className='time-label'></span>
+
+            <ul className="week">
+              {weekDays.map((day, index) => (
+                <li className='calendar-cell' key={index}>
+                  <div className="week-day-header">
+                    <div className="day-name">
+                      {day.toLocaleDateString('en-US', { weekday: 'short' })}
+                    </div>
+                    <div className="day-number">{day.getDate()}</div>
                   </div>
-                  <div className="day-number">{day.getDate()}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
+                </li>
+              ))}
+            </ul>
+          </div>
 
           {hrs.map((slot) => (
             <div key={slot} className="time-row">
-              <span className="time-label">{slot}</span>
+              <span className="time-label">
+                {settings.timeFormat === "24" ? `${slot}:00` : slot}
+              </span>
               {renderTimeBlocks(slot)}
             </div>
           ))}

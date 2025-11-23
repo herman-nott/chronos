@@ -1,7 +1,7 @@
 .mon-calendar-box {
   position: relative;
   width: 100%;
-  min-height: 70%;
+  height: 100vh;
   /* max-width: 364px; */
   /* mb-6 */
   box-shadow: 0 4px 8px #00000026;
@@ -16,7 +16,7 @@
   align-items: start;
   padding: 3em 1.5em;
   /* py-2 px-5 */
-
+  height: inherit;
 }
 
 /* head */
@@ -85,17 +85,43 @@
   color: var(--text-white);
 }
 
-.mon-days{
+/* .mon-days{
   display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  margin-bottom: 18px;
 }
+
 .mon-days li {
   z-index: 1;
   cursor: pointer;
   position: relative;
-  margin-top: 20px;
+  margin-top: 1em;
+} */
+
+.mon-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  /* 7 days per week */
+  grid-template-rows: repeat(6, 1fr);
+  /* always 6 rows */
+  width: 100%;
+  height: 80%;
+  gap: 0;
+  /* optional */
+}
+
+.mon-days li {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  position: relative;
+  cursor: pointer;
+
+  border: solid 1px rgba(255, 255, 255, 0.5);
 }
 
 .mon-days li.inactive {
@@ -122,10 +148,6 @@
 
 .mon-days li:not(.active):hover::before {
   background: #f2f2f2;
-}
-
-.mon-days {
-  margin-bottom: 18px;
 }
 
 .mon-days span {

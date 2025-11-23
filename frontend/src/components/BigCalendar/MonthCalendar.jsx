@@ -57,9 +57,17 @@ export default function MonthView({
 
   // Generate all days dynamically for the current month
   function getDays() {
-    const firstDayOfMonth = new Date(currYear, currMonth, 1).getDay();
+    function getMondayFirstDay(jsDay) {
+      return (jsDay + 6) % 7;
+    }
+
+    const firstDayOfMonth = getMondayFirstDay(
+      new Date(currYear, currMonth, 1).getDay()
+    );
     const lastDateOfMonth = new Date(currYear, currMonth + 1, 0).getDate();
-    const lastDayOfMonth = new Date(currYear, currMonth, lastDateOfMonth).getDay();
+     const lastDayOfMonth = getMondayFirstDay(
+    new Date(currYear, currMonth, lastDateOfMonth).getDay()
+  );
     const lastDateOfPrevMonth = new Date(currYear, currMonth, 0).getDate();
 
     const days = [];
@@ -119,13 +127,13 @@ export default function MonthView({
 
         {/* Week Labels */}
         <ul className="weeks">
-          <li>Sun</li>
           <li>Mon</li>
           <li>Tue</li>
           <li>Wed</li>
           <li>Thu</li>
           <li>Fri</li>
           <li>Sat</li>
+          <li>Sun</li>
         </ul>
 
         {/* Days */}

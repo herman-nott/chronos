@@ -205,8 +205,8 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
         </div>
 
-        <div className="gap-2" onClick={(e) => openPopup("calendar", e)}> 
-          <span className="mr-2">Add Calendar</span>
+        <div className="menu-item gap-2" onClick={(e) => openPopup("calendar", e)}> 
+          <span className="menu-text mr-2">Add Calendar</span>
           <i className="fa-solid fa-plus transition-transform white"></i>
         </div>
 
