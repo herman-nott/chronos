@@ -11,14 +11,19 @@ async function handleGetEvents(req, res) {
             return res.status(404).json({ error: "Calendar not found" });
         }
 
-        if (String(calendar.owner) !== req.session.user.id) {
+        const isOwner = String(calendar.owner) === req.session.user.id;
+        const isMember = calendar.members?.some(
+            memberId => String(memberId) === req.session.user.id
+        );
+
+        if (!isOwner && !isMember) {
             return res.status(403).json({ error: "Access denied" });
         }
 
         const events = await Event.find({ calendar_id: calendarId });
         res.json(events);
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ error: "Server error" });
     }
 }
