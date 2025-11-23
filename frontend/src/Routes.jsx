@@ -8,28 +8,22 @@ import RegisterPage from './components/Auth/Register/Register'
 import VerifyEmailPage from './components/Auth/VerifyEmail/VerifyEmail';
 import ParticleBackground from './components/ParticleBackground/ParticleBackground'
 import BodyClassController from './components/BodyClassController/BodyClassController'
+import PasswordResetWithTocken from './components/Auth/PasswordReset/PasswordReset';
 
 const AppRoutes = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
   const [userId, setUserId] = useState(null);
   const location = useLocation();
 
+  const [passwordResetToken, setPasswordResetToken] = useState('');
+
   const authRoutes = ['/login', '/register', '/verify-email', '/password-reset', '/'];
   const showParticle = authRoutes.includes(location.pathname);
-  console.log(location.pathname)
-  // console.log();
-  
+
   function onLoginSuccess(userId) {
     setIsSignedIn(true);
     setUserId(userId);
   }
-
-  const path = window.location.pathname;
-    if (path.startsWith("/password-reset/")) {
-      const token = path.split("/")[2];
-      setPasswordResetToken(token);
-      setRoute("password-reset");
-    }
 
   return (
    <>
@@ -41,6 +35,7 @@ const AppRoutes = () => {
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
+          <Route path='/password-reset/:token' element={<PasswordResetWithTocken />} />
         </Routes>
    </>
   );

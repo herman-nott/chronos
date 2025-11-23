@@ -60,7 +60,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
 
         const defaultCalendar = await Calendar.create({
             owner: newUser._id,
-            title: `@${newUser.login}'s calendar`,
+            title: `Main calendar`,
             color: "#2196F3",
             is_visible: true,
             members: []
