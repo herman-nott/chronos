@@ -23,29 +23,8 @@ const CalendarSchema = new mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: 'User'
         }
-    ], 
-
-    // зашарить с челиком, приглосы
-    shared_with: [
-        {
-            userid: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "User",
-            },
-            email: String, // для приглосов
-            permission: {
-                type: String,
-                enum: ["view", "edit"],
-                default: "view",
-            },
-            accepted: {
-                type: Boolean,
-                default: false,
-            },
-        },
-    ],
-},
-{ timestamps: true });
+    ]
+}, { timestamps: true });
 
 const Calendar = mongoose.model('Calendar', CalendarSchema);
 
