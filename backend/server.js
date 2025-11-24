@@ -41,6 +41,8 @@ import handleCreateEvent from "./controllers/event/createEvent.js";
 import handleGetEvents from "./controllers/event/getEvents.js";
 import handleUpdateEvent from "./controllers/event/updateEvent.js";
 import handleDeleteEvent from "./controllers/event/deleteEvent.js";
+import handleShareEvent from "./controllers/event/shareEvent.js";
+import handleGetSharedEvent from "./controllers/event/getSharedEvent.js";
 // ~~~ User ~~~
 import handleSearchUsers from "./controllers/user/searchUsers.js";
 
@@ -73,6 +75,7 @@ async function start() {
     });
     app.get('/api/calendars', requireAuth, (req, res) => { handleGetCalendars(req, res) });
     app.get('/api/events/:calendarId', requireAuth, (req, res) => { handleGetEvents(req, res) });
+    app.get('/api/events/shared/:shareToken', (req, res) => { handleGetSharedEvent(req, res) });
     app.get('/api/users/search', requireAuth, (req, res) => { handleSearchUsers(req, res) });
     app.get('/api/calendars/:calendarId/members', requireAuth, (req, res) => { handleGetMembers(req, res) });
 
@@ -87,6 +90,7 @@ async function start() {
     app.post('/api/calendars/:calendarId/events', requireAuth, (req, res) => { handleCreateEvent(req, res) });
     app.post('/api/calendars/:calendarId/invite', requireAuth, (req, res) => { handleInviteToCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/members/remove', requireAuth, (req, res) => { handleRemoveMember(req, res) });
+    app.post('/api/events/:eventId/share', requireAuth, (req, res) => { handleShareEvent(req, res, nodemailer) });
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });

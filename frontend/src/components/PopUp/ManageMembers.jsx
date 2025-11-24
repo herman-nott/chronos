@@ -32,19 +32,18 @@ const ManageMembers = ({ calendarId, onClose }) => {
   return (
     <div className="event-popup">
       <div className="invite-manager">
+        <h2>Manage Members</h2>
 
-      <h2>Manage Members</h2>
+        {members.length === 0 && <p>No members yet</p>}
 
-      {members.length === 0 && <p>No members yet</p>}
-
-      {members.map(m => (
-        <div className="member-row" key={m._id}>
-          <span>{m.username} ({m.email})</span>
-          <button onClick={() => removeMember(m._id)} className="remove-btn" >
-            Remove
-          </button>
-        </div>
-      ))}
+        {members.map(m => (
+          <div className="member-row" key={m._id}>
+            <span>{m.username} ({m.email})</span>
+            <button onClick={() => removeMember(m._id)} className="remove-btn">
+              Remove
+            </button>
+          </div>
+        ))}
 
       <button className="close-btn " onClick={onClose} style={{
         borderRadius: '5px',

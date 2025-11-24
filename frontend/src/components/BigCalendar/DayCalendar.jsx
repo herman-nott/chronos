@@ -6,6 +6,7 @@ export default function DayView({
   onDateChange, 
   currentDate, 
   events = [], 
+  calendars = [], 
   onEventClick, 
   onTimeSlotClick,
   settings = { timeFormat: "24" }
@@ -15,7 +16,7 @@ export default function DayView({
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
   const [myCalendars, setMyCalendars] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
-  
+
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -57,17 +58,17 @@ export default function DayView({
 
   // Parse time slot like "9AM" to hour number
   const parseTimeSlot = (slot) => {
-  if (settings.timeFormat === "24") {
-    return Number(slot); // slot is already "0"…"23"
-  } else {
-    const isPM = slot.includes("PM");
-    const hour = parseInt(slot.replace(/[AP]M/, ""));
+    if (settings.timeFormat === "24") {
+      return Number(slot); // slot is already "0"…"23"
+    } else {
+      const isPM = slot.includes("PM");
+      const hour = parseInt(slot.replace(/[AP]M/, ""));
 
-    if (isPM && hour !== 12) return hour + 12;
-    if (!isPM && hour === 12) return 0;
-    return hour;
-  }
-};
+      if (isPM && hour !== 12) return hour + 12;
+      if (!isPM && hour === 12) return 0;
+      return hour;
+    }
+  };
 
   const handleCellClick = (timeSlot, dayIndex) => {
     if (onTimeSlotClick) {
@@ -75,7 +76,6 @@ export default function DayView({
       const clickedDate = new Date(currentDate);
       clickedDate.setHours(hour, 0, 0, 0);
       onTimeSlotClick(clickedDate);
-      
     }
 
     const cellKey = `${timeSlot}-${dayIndex}`;
@@ -105,6 +105,11 @@ export default function DayView({
     }
   };
 
+  const getCalendarColor = (calendarId) => {
+    const calendar = calendars.find(cal => cal._id === calendarId);
+    return calendar?.color || '#2196F3'; // Default
+  };
+
   const renderTimeBlocks = (timeSlot) => {
     const days = 1;
     const blocks = [];
@@ -118,13 +123,13 @@ export default function DayView({
         <div
           key={dayIndex}
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
-          // onClick={() => handleCellClick(timeSlot, dayIndex)}
-           onClick={(e) => openPopup("event", e)}
+          onClick={(e) => openPopup("event", e)}
         >
           {cellItems.map(event => (
             <div
               key={event._id}
               className={`event-block ${event.category}`}
+              style={{ backgroundColor: getCalendarColor(event.calendarId) }}
               onClick={(e) => handleItemClick(event, e)}
               title={`${event.title}\n${event.description || ''}`}
             >
@@ -156,7 +161,7 @@ export default function DayView({
     // setEditingCalendar(extra.editingCalendar ?? null);
     setShowMenu(false);
   };
-
+  
   return (
     <>
     {popup === "event" && (
@@ -168,7 +173,6 @@ export default function DayView({
         />
       </Popup>
     )}
-
       <div className="calendar-container w-100">
         <div className="calendar-grid">
           <span className='' style={{display:'flex', justifyContent: 'center'}}>{currentDate.toLocaleDateString('en-US', { weekday: 'long' })}</span>
