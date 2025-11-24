@@ -10,6 +10,7 @@ import ParticleBackground from './components/ParticleBackground/ParticleBackgrou
 import BodyClassController from './components/BodyClassController/BodyClassController'
 import PasswordResetWithTocken from './components/Auth/PasswordReset/PasswordReset';
 import SharedEventView from './components/SharedEventView/SharedEventView';
+import SharedCalendarView from './components/SharedCalendarView/SharedCalendarView';
 
 const AppRoutes = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -38,6 +39,7 @@ const AppRoutes = () => {
           <Route path="/" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
           <Route path='/password-reset/:token' element={<PasswordResetWithTocken />} />
           <Route path="/event/shared/:shareToken" element={<SharedEventView />} />
+          <Route path="/calendar/shared/:shareToken" element={<SharedCalendarView />} />
         </Routes>
    </>
   );

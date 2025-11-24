@@ -36,6 +36,9 @@ import handleDeleteCalendar from "./controllers/calendar/deleteCalendar.js";
 import handleInviteToCalendar from "./controllers/calendar/inviteUser.js";
 import handleGetMembers from "./controllers/calendar/getMembers.js";
 import handleRemoveMember from "./controllers/calendar/removeMember.js";
+import handleShareCalendar from "./controllers/calendar/shareCalendar.js";
+import handleGetSharedCalendar from "./controllers/calendar/getSharedCalendar.js";
+import handleGenerateShareLink from "./controllers/calendar/generateShareLink.js";
 // ~~~ Event ~~~
 import handleCreateEvent from "./controllers/event/createEvent.js";
 import handleGetEvents from "./controllers/event/getEvents.js";
@@ -78,6 +81,7 @@ async function start() {
     app.get('/api/events/shared/:shareToken', (req, res) => { handleGetSharedEvent(req, res) });
     app.get('/api/users/search', requireAuth, (req, res) => { handleSearchUsers(req, res) });
     app.get('/api/calendars/:calendarId/members', requireAuth, (req, res) => { handleGetMembers(req, res) });
+    app.get('/api/calendars/shared/:shareToken', (req, res) => { handleGetSharedCalendar(req, res) });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });
@@ -91,6 +95,8 @@ async function start() {
     app.post('/api/calendars/:calendarId/invite', requireAuth, (req, res) => { handleInviteToCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/members/remove', requireAuth, (req, res) => { handleRemoveMember(req, res) });
     app.post('/api/events/:eventId/share', requireAuth, (req, res) => { handleShareEvent(req, res, nodemailer) });
+    app.post('/api/calendars/:calendarId/share', requireAuth, (req, res) => { handleShareCalendar(req, res, nodemailer) });
+    app.post('/api/calendars/:calendarId/generate-share-link', requireAuth, (req, res) => { handleGenerateShareLink(req, res) });
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
