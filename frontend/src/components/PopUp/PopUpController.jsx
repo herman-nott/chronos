@@ -1,4 +1,3 @@
-// PopupController.jsx
 import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
 import Settings from '../PopUp/Settings';

@@ -74,6 +74,7 @@
   width: 100%;
   height: 30vh;
   margin-bottom: 2em; 
+  /* overflow: scroll; <-- this causes the calendar settings menu to be gobbled up*/
   overflow: scroll;
   scrollbar-width: none;
 }

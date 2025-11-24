@@ -72,6 +72,40 @@ const EventSchema = new mongoose.Schema(
 
     // общие для всех
     reminders: [Number],
+
+    // для того, шоб поделиться ивентом
+    shared_with: [{
+      email: { 
+        type: String, 
+        required: true 
+      },
+      userid: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+      },
+      permission: { 
+        type: String, 
+        enum: ['view', 'edit'], 
+        default: 'view' 
+      },
+      accepted: { 
+        type: Boolean, 
+        default: false 
+      },
+      shareToken: { 
+        type: String, 
+        unique: true,
+        sparse: true  // Allows multiple null values
+      },
+      sharedBy: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User' 
+      },
+      sharedAt: { 
+        type: Date, 
+        default: Date.now 
+      }
+    }],
   },
   { timestamps: true }
 );

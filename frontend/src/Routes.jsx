@@ -9,6 +9,7 @@ import VerifyEmailPage from './components/Auth/VerifyEmail/VerifyEmail';
 import ParticleBackground from './components/ParticleBackground/ParticleBackground'
 import BodyClassController from './components/BodyClassController/BodyClassController'
 import PasswordResetWithTocken from './components/Auth/PasswordReset/PasswordReset';
+import SharedEventView from './components/SharedEventView/SharedEventView';
 
 const AppRoutes = () => {
   const [isSignedIn, setIsSignedIn] = useState(false);
@@ -36,6 +37,7 @@ const AppRoutes = () => {
           <Route path="/verify-email" element={<VerifyEmailPage />} />
           <Route path="/" element={<LoginPage onLoginSuccess={onLoginSuccess} />} />
           <Route path='/password-reset/:token' element={<PasswordResetWithTocken />} />
+          <Route path="/event/shared/:shareToken" element={<SharedEventView />} />
         </Routes>
    </>
   );

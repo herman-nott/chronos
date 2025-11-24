@@ -3,6 +3,11 @@ import SearchView from '../ui/SearchView/SearchView';
 import CalendarSidebar from '../LeftSide/LeftSide';
 import BigCalendar from '../BigCalendar/BigCalendar';
 import NewEvent from '../PopUp/NewEvent';
+import EventDetails from '../PopUp/EventDetails';
+import ShareEvent from '../PopUp/ShareEvent';
+import EditEvent from '../PopUp/EditEvent';
+import Popup from '../PopUp/PopUp';
+
 import { useState, useEffect } from 'react';
 import './Calendar.css';
 
@@ -21,9 +26,15 @@ export default function Calendar() {
   });
 
   const [calendarId, setCalendarId] = useState(null);
+  const [calendars, setCalendars] = useState([]);
   const [allEvents, setAllEvents] = useState([]);
   const [visibleCalendars, setVisibleCalendars] = useState({});
   const [showNewEvent, setShowNewEvent] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [showEventDetails, setShowEventDetails] = useState(false);
+  const [showShareEvent, setShowShareEvent] = useState(false);
+  const [showEditEvent, setShowEditEvent] = useState(false);
+  const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -99,6 +110,9 @@ export default function Calendar() {
       const data = await response.json();
       const allCalendars = [...(data.myCalendars || []), ...(data.otherCalendars || [])];
       
+      // v tom chisle tsveta
+      setCalendars(allCalendars);
+      
       const eventsPromises = allCalendars.map(calendar =>
         fetch(`http://localhost:3000/api/events/${calendar._id}`, {
           credentials: 'include',
@@ -139,9 +153,31 @@ export default function Calendar() {
     setAllEvents([...allEvents, newEvent]);
   };
 
+  const handleShareEvent = (event) => {
+    setSelectedEvent(event);
+    setShowEventDetails(false);
+    setShowShareEvent(true);
+  };
+
+  const handleEditEvent = (event) => {
+    setSelectedEvent(event);
+    setShowEventDetails(false);
+    setShowEditEvent(true);
+  };
+
   // рефетч данных
   const handleDataCreated = (type, data) => {
     fetchEvents();
+  };
+
+  const handleEventDeleted = (eventId) => {
+    setAllEvents(allEvents.filter(e => e._id !== eventId));
+  };
+
+  const handleEventUpdated = (updatedEvent) => {
+    setAllEvents(allEvents.map(e => 
+      e._id === updatedEvent._id ? updatedEvent : e
+    ));
   };
 
   const handleSmallCalendarDaySelect = (date) => {
@@ -160,7 +196,18 @@ export default function Calendar() {
       onDateChange: setCurrentInfo, 
       currentDate,
       events: visibleEvents,
-      onEventClick: (event) => console.log('Event clicked:', event),
+      calendars: calendars, // Add this
+      onEventClick: (event, e) => {
+        const rect = e?.target?.getBoundingClientRect();
+        if (rect) {
+          setPopupPosition({ 
+            x: rect.right + 10, 
+            y: rect.top 
+          });
+        }
+        setSelectedEvent(event);
+        setShowEventDetails(true);
+      },
       onTimeSlotClick: (date) => {
         setCurrentDate(date);
       }
@@ -293,6 +340,75 @@ export default function Calendar() {
           </div>
         </div>
       </div>
+
+      {/* Event Details Popup */}
+      {showEventDetails && selectedEvent && (
+        <Popup 
+          position={popupPosition} 
+          onClose={() => {
+            setShowEventDetails(false);
+            setSelectedEvent(null);
+          }}
+        >
+          <EventDetails
+            event={selectedEvent}
+            onClose={() => {
+              setShowEventDetails(false);
+              setSelectedEvent(null);
+            }}
+            onEdit={handleEditEvent}
+            onDelete={handleEventDeleted}
+            onShare={handleShareEvent}
+          />
+        </Popup>
+      )}
+
+      {/* Edit Event Popup */}
+      {showEditEvent && selectedEvent && (
+        <Popup 
+          position={popupPosition} 
+          onClose={() => {
+            setShowEditEvent(false);
+            setSelectedEvent(null);
+          }}
+        >
+          <EditEvent
+            event={selectedEvent}
+            onClose={() => {
+              setShowEditEvent(false);
+              setSelectedEvent(null);
+            }}
+            onEventUpdated={(updatedEvent) => {
+              handleEventUpdated(updatedEvent);
+              setShowEditEvent(false);
+              setSelectedEvent(null);
+            }}
+          />
+        </Popup>
+      )}
+
+      {/* Share Event Popup */}
+      {showShareEvent && selectedEvent && (
+        <Popup 
+          position={popupPosition} 
+          onClose={() => {
+            setShowShareEvent(false);
+            setSelectedEvent(null);
+          }}
+        >
+          <ShareEvent
+            event={selectedEvent}  // Pass event object, not eventId
+            onClose={() => {
+              setShowShareEvent(false);
+              setSelectedEvent(null);
+            }}
+            onShared={(data) => {
+              console.log('Event shared:', data);
+              fetchEvents();
+            }}
+          />
+        </Popup>
+      )}
 
       {showNewEvent && calendarId && (
         <NewEvent

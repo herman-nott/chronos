@@ -165,6 +165,13 @@ function Register() {
                       <option value="DE">Germany</option>
                     </select>
                   </div>
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
+                    <select value={country} onChange={e => onCountryChange(e.target.value)}>
+                      <option value="UA">Ukraine</option>
+                      <option value="DE">Germany</option>
+                    </select>
+                  </div>
                 </div>
               </div>
             </fieldset>
@@ -188,13 +195,13 @@ function Register() {
           <div className="loader"></div>
         </div>
       )}
-      
+
       {error && (
         <p style={{ color: 'red', fontWeight: 'bold' }}> 
           &#10006; {error}
         </p>
       )}
-        
+    
     </div>
   );
 }

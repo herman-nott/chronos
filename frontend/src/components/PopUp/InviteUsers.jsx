@@ -68,11 +68,11 @@ const InviteUsers = ({ calendarId, onClose }) => {
           value={query}
           onChange={e => setQuery(e.target.value)}
         />
-      </div>
+        </div>
         {suggestions.length > 0 && (
           <ul className="suggestions">
             {suggestions.map(user => (
-              <li key={user._id} onClick={() => addUser(user)} style={{listStyle: 'none'}}>
+                <li key={user._id} onClick={() => addUser(user)} style={{listStyle: 'none'}}>
                 {user.login} ({user.email})
               </li>
             ))}
@@ -82,7 +82,7 @@ const InviteUsers = ({ calendarId, onClose }) => {
       {selectedUsers.length > 0 && (
         <div className="selected-users gap-1">
           {selectedUsers.map(user => (
-              <span key={user._id} className="selected-user mr-2">
+            <span key={user._id} className="selected-user mr-2">
                 {user.login} 
               <button onClick={() => removeUser(user._id)}
                 style={{

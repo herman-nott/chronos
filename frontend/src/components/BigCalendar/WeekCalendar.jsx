@@ -7,19 +7,15 @@ export default function WeekView({
   onDateChange,
   currentDate,
   events = [],
-  tasks = [],
-  appointments = [],
+  calendars = [],
   onTimeSlotClick,
-  onEventClick, 
-  onTaskClick, 
-  onAppointmentClick,
+  onEventClick,
   settings = { timeFormat: "24" } 
 }) {
   const [popup, setPopup] = useState(null);
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
   const [myCalendars, setMyCalendars] = useState([]);
   const [showMenu, setShowMenu] = useState(false);
-
   useEffect(() => {
     onDateChange({
       year: currentDate.getFullYear(),
@@ -82,17 +78,17 @@ export default function WeekView({
 
   // Parse time slot like "9AM" to hour number
   const parseTimeSlot = (slot) => {
-  if (settings.timeFormat === "24") {
-    return Number(slot); // slot is already "0"…"23"
-  } else {
-    const isPM = slot.includes("PM");
-    const hour = parseInt(slot.replace(/[AP]M/, ""));
+    if (settings.timeFormat === "24") {
+      return Number(slot); // slot is already "0"…"23"
+    } else {
+      const isPM = slot.includes("PM");
+      const hour = parseInt(slot.replace(/[AP]M/, ""));
 
-    if (isPM && hour !== 12) return hour + 12;
-    if (!isPM && hour === 12) return 0;
-    return hour;
-  }
-};
+      if (isPM && hour !== 12) return hour + 12;
+      if (!isPM && hour === 12) return 0;
+      return hour;
+    }
+  };
 
   const handleCellClick = (timeSlot, dayIndex) => {
     if (onTimeSlotClick) {
@@ -115,6 +111,11 @@ export default function WeekView({
     });
   };
 
+  const getCalendarColor = (calendarId) => {
+    const calendar = calendars.find(cal => cal._id === calendarId);
+    return calendar?.color || '#2196F3'; // Default
+  };
+
   const renderTimeBlocks = (timeSlot) => {
     const days = 7;
     const blocks = [];
@@ -129,12 +130,13 @@ export default function WeekView({
           key={dayIndex}
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
           // onClick={() => handleCellClick(timeSlot, dayIndex)}
-           onClick={(e) => openPopup("event", e)}
+          onClick={(e) => openPopup("event", e)}
         >
           {cellItems.map(event => (
             <div
               key={event._id}
               className={`event-block ${event.category}`}
+              style={{ backgroundColor: getCalendarColor(event.calendarId) }}
               onClick={(e) => {
                 e.stopPropagation();
                 onEventClick?.(event);

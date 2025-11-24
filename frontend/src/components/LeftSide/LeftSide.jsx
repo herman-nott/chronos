@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
+
 import CheckBox from '../ui/CheckBox/CheckBox';
 import MiniCalendar from '../SmallCalendar/SmallCalendar';
-// import Popup from '../PopUp/PopUp';
-// import NewEvent from '../PopUp/NewEvent';
-// import Settings from '../PopUp/Settings';
-// import NewCalendar from '../PopUp/NewClendar';
-// import EditCalendar from '../PopUp/EditCalendar';
-// import InviteUsers from '../PopUp/InviteUsers';
-// import ManageMembers from '../PopUp/ManageMembers';
+/*import Popup from '../PopUp/PopUp';
+import NewEvent from '../PopUp/NewEvent';
+import Settings from '../PopUp/Settings';
+import NewCalendar from '../PopUp/NewClendar';
+import EditCalendar from '../PopUp/EditCalendar';
+import InviteUsers from '../PopUp/InviteUsers';
+import ManageMembers from '../PopUp/ManageMembers';*/
 
 import PopupController from '../PopUp/PopUpController';
 
@@ -144,7 +145,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
       });
   };
 
-// When a calendar is edited
+  // When a calendar is edited
   const handleCalendarEdited = (updatedData) => {
     if (!editingCalendar) return;
 
@@ -162,7 +163,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
         setPopup(null);
       })
       .catch(err => console.error("Failed to update calendar:", err));
-  };
+    };
 
   return (
     <div className={`left-side ${collapsed ? 'collapsed' : ''}`}>
@@ -185,7 +186,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
             <span className="menu-text gap-1">Create event </span>
             <i className="fa-solid fa-chevron-right white"></i>
           </button>
-          
+
           <PopupController
             popup={popup}
             position={popupPosition}
@@ -207,7 +208,6 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
             <i className="fa-solid fa-gear white"></i>
           </button>
         </div>
-
 
         <div className="smallCalendar">
           {!collapsed && <MiniCalendar onDaySelect={onDaySelect}/>}
@@ -349,7 +349,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
       </div>
       )}
     </div>
-          
+
   );
 };
 
