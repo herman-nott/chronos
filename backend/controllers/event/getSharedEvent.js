@@ -5,7 +5,6 @@ export default async function handleGetSharedEvent(req, res) {
   try {
     const { shareToken } = req.params;
 
-    // Find event with this share token
     const event = await Event.findOne({
       'shared_with.shareToken': shareToken
     }).populate('calendar_id');
@@ -24,17 +23,9 @@ export default async function handleGetSharedEvent(req, res) {
     // Get sharer info
     const sharer = await User.findById(shareEntry.sharedBy);
 
-    // Return event details with sharing information
+    // Return the FULL event object
     res.json({
-      event: {
-        _id: event._id,
-        title: event.title,
-        description: event.description,
-        start: event.start,
-        end: event.end,
-        location: event.location,
-        color: event.color,
-      },
+      event: event.toObject(),
       calendar: event.calendar_id ? {
         _id: event.calendar_id._id,
         title: event.calendar_id.title,
