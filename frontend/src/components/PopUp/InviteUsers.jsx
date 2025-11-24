@@ -39,7 +39,7 @@ const InviteUsers = ({ calendarId, onClose }) => {
   const handleInvite = async () => {
     try {
       for (const user of selectedUsers) {
-        console.log(calendarId);
+        // console.log(calendarId);
         
         const res = await fetch(`http://localhost:3000/api/calendars/${calendarId}/invite`, {
           method: 'POST',
