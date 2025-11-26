@@ -196,7 +196,8 @@ export default function Calendar() {
       onDateChange: setCurrentInfo, 
       currentDate,
       events: visibleEvents,
-      calendars: calendars, // Add this
+      calendars: calendars,
+      onDataCreated: handleDataCreated,
       onEventClick: (event, e) => {
         const rect = e?.target?.getBoundingClientRect();
         if (rect) {
