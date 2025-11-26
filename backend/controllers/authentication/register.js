@@ -105,7 +105,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             // console.log(`Password reset email sent to ${newUser.email}`);
         } catch (error) {
             // console.error('Error sending email confirmation email:', error);
-            res.status(500).send('Unable to register');
+            return res.status(500).json({ error: 'Unable to register' });
         }
 
         // добавить сессию

@@ -48,7 +48,8 @@ function Register() {
     // setIsLoading(true);
     const loaderTimeout = setTimeout(() => setIsLoading(true), 150);
 
-    fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+    // fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+    fetch(`http://localhost:3000/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
@@ -161,13 +162,6 @@ function Register() {
                   <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
                     <select value={country} onChange={e => onCountryChange(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
-                      <option value="UA">Ukraine</option>
-                      <option value="DE">Germany</option>
-                    </select>
-                  </div>
-                  <div className="mt3">
-                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
-                    <select value={country} onChange={e => onCountryChange(e.target.value)}>
                       <option value="UA">Ukraine</option>
                       <option value="DE">Germany</option>
                     </select>
