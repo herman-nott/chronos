@@ -48,6 +48,7 @@ function Register() {
     // setIsLoading(true);
     const loaderTimeout = setTimeout(() => setIsLoading(true), 150);
 
+    // fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
     fetch(`http://localhost:3000/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
