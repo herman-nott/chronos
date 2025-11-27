@@ -96,7 +96,8 @@ const InviteUsers = ({ calendarId, onClose }) => {
             credentials: 'include',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ 
-              email: user.email
+              email: user.email,
+              permission: permission
             })
           }
         );

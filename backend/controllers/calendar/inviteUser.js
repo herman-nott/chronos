@@ -1,10 +1,11 @@
 import User from '../../database/models/User.js';
 import Calendar from '../../database/models/Calendar.js';
+import crypto from 'crypto';
 
 async function handleInviteToCalendar(req, res, nodemailer) {
     try {
         const { calendarId } = req.params;
-        const { email } = req.body;
+        const { email, permission = 'edit' } = req.body; // Default to 'edit' for invited members
 
         const currentUserId = req.session.user.id;
 
@@ -23,10 +24,22 @@ async function handleInviteToCalendar(req, res, nodemailer) {
         }
 
         calendar.members.push(user._id);
+
+        const shareToken = crypto.randomBytes(32).toString('hex');
+        calendar.shared_with.push({
+            email: user.email,
+            userid: user._id,
+            permission: permission,
+            accepted: true, // Auto-accept for invited members
+            shareToken,
+            sharedBy: currentUserId,
+            sharedAt: new Date()
+        });
+
         await calendar.save();
 
         try {
-            const transporter = nodemailer.createTransport({
+            const transporter = nodemailer.createTransporter({
                 host: process.env.SMTP_HOST,
                 port: process.env.SMTP_PORT,
                 secure: process.env.SMTP_SECURE === 'true',
@@ -47,14 +60,13 @@ async function handleInviteToCalendar(req, res, nodemailer) {
                     <p>— Chronos Team</p>
                 `
             };
-            
 
             await transporter.sendMail(mailOptions);
         } catch (emailError) {
             console.error("Email sending failed:", emailError);
         }
 
-        res.json({ message: `User ${email} invited successfully and notified by email.` });
+        res.json({ message: `User ${email} invited successfully with ${permission} permission.` });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error" });

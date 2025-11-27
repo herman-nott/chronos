@@ -1,5 +1,6 @@
 import Event from "../../database/models/Event.js";
 import Calendar from "../../database/models/Calendar.js";
+import hasCalendarPermission from "../../middleware/checkCalendarPermission.js";
 
 async function handleCreateEvent(req, res) {
     try {
@@ -24,8 +25,9 @@ async function handleCreateEvent(req, res) {
             return res.status(404).json({ error: "Calendar not found" });
         }
 
-        if (String(calendar.owner) !== req.session.user.id) {
-            return res.status(403).json({ error: "Access denied" });
+        const canEdit = await hasCalendarPermission(calendarId, req.session.user.id, 'edit');
+        if (!canEdit) {
+            return res.status(403).json({ error: "Access denied: No clearance" });
         }
 
         const eventData = {
