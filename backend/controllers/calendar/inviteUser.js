@@ -5,7 +5,7 @@ import crypto from 'crypto';
 async function handleInviteToCalendar(req, res, nodemailer) {
     try {
         const { calendarId } = req.params;
-        const { email, permission = 'edit' } = req.body; // Default to 'edit' for invited members
+        const { email, permission = 'edit' } = req.body; // Default to 'edit' if not set
 
         const currentUserId = req.session.user.id;
 
