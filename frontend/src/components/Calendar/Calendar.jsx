@@ -39,6 +39,10 @@ export default function Calendar() {
   const [popupPosition, setPopupPosition] = useState({ x: 200, y: 120 });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
   // const [userSettings, setUserSettings] = useState(null);
 
   // useEffect(() => {

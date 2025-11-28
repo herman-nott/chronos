@@ -4,8 +4,8 @@ const SettingsContext = createContext();
 
 export function SettingsProvider({ children }) {
   const defaultSettings = {
-    country: "Ukraine",
-    timeFormat: "24h"
+    country: "ua",
+    timeFormat: "24"
   };
   const [settings, setSettings] = useState(defaultSettings);
 

@@ -286,7 +286,7 @@ export default function WeekView({
       )}
       <div className="calendar-container">
         <div className="calendar-grid">
-          <CurrentTimeLine startHour={0} endHour={24} hourHeight={72} offsetTop={75} />
+          <CurrentTimeLine startHour={0} endHour={24} hourHeight={72} offsetTop={100} />
 
           <div className="time-row">
             <span className='time-label'></span>

@@ -39,7 +39,7 @@ async function handleInviteToCalendar(req, res, nodemailer) {
         await calendar.save();
 
         try {
-            const transporter = nodemailer.createTransporter({
+            const transporter = nodemailer.createTransport({
                 host: process.env.SMTP_HOST,
                 port: process.env.SMTP_PORT,
                 secure: process.env.SMTP_SECURE === 'true',

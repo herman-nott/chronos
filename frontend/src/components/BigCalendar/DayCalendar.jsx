@@ -271,7 +271,7 @@ export default function DayView({
       )}
       <div className="calendar-container w-100" style={{ position: 'relative' }}>
         <div className="calendar-grid">
-          <CurrentTimeLine startHour={0} endHour={24} hourHeight={72} offsetTop={30} />
+          <CurrentTimeLine startHour={0} endHour={24} hourHeight={72} offsetTop={60} />
 
           <span className='' style={{display:'flex', justifyContent: 'center'}}>
             {currentDate.toLocaleDateString('en-US', { weekday: 'long' })}
