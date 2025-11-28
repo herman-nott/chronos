@@ -74,7 +74,7 @@ export default function Calendar() {
         if (data.myCalendars && data.myCalendars.length > 0) {
           setCalendarId(data.myCalendars[0]._id);
         } else {
-          await createDefaultCalendar();
+          // await createDefaultCalendar();
         }
       } catch (error) {
         console.error('Error fetching calendars:', error);
@@ -86,32 +86,32 @@ export default function Calendar() {
   }, []);
 
   // создание дефолтного календаря -- проверить, вызывает ли создание двух на рыло
-  const createDefaultCalendar = async () => {
-    try {
-      const response = await fetch('http://localhost:3000/api/calendars', {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Accept': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify({
-          title: 'My Calendar',
-          color: '#2196F3'
-        })
-      });
+  // const createDefaultCalendar = async () => {
+  //   try {
+  //     const response = await fetch('http://localhost:3000/api/calendars', {
+  //       method: 'POST',
+  //       headers: { 
+  //         'Content-Type': 'application/json',
+  //         'Accept': 'application/json',
+  //       },
+  //       credentials: 'include',
+  //       body: JSON.stringify({
+  //         title: 'My Calendar',
+  //         color: '#2196F3'
+  //       })
+  //     });
 
-      if (!response.ok) {
-        throw new Error('Failed to create calendar');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('Failed to create calendar');
+  //     }
 
-      const data = await response.json();
-      setCalendarId(data._id);
-    } catch (error) {
-      console.error('Error creating calendar:', error);
-      setError('Failed to create calendar. Please try again.');
-    }
-  };
+  //     const data = await response.json();
+  //     setCalendarId(data._id);
+  //   } catch (error) {
+  //     console.error('Error creating calendar:', error);
+  //     setError('Failed to create calendar. Please try again.');
+  //   }
+  // };
 
   // фетч ВСЁ
   const fetchEvents = async () => {
