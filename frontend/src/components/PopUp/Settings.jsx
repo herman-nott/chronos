@@ -23,20 +23,20 @@ export default function Settings({ onClose }) {
   
 
   async function logout() {
-      try {
-        const res = await fetch('http://localhost:3000/api/auth/logout', {
-          method: 'POST',
-          credentials: 'include',
-        });
+    try {
+      const res = await fetch('http://localhost:3000/api/auth/logout', {
+        method: 'POST',
+        credentials: 'include',
+      });
 
-        if (res.ok) {
-          navigate('/login')
-        } else {
-          console.error('Error when logout:', await res.text());
-        }
-      } catch (err) {
-        console.error('Logout failed:', err);
+      if (res.ok) {
+        navigate('/login')
+      } else {
+        console.error('Error when logout:', await res.text());
       }
+    } catch (err) {
+      console.error('Logout failed:', err);
+    }
   }
 
   async function handleSubmit() {

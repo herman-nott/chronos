@@ -16,6 +16,7 @@ async function handleUpdateSettings(req, res) {
             success: true,
             user: {
                 country: updated.country,
+                locale: updated.country,
                 time_format: updated.time_format
             }
         });

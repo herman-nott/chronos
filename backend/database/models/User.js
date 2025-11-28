@@ -27,10 +27,10 @@ const UserSchema = new mongoose.Schema({
         enum: ['12', '24'],
         default: '24'
     },
-    locale: { 
-        type: String, 
-        default: 'en-US' 
-    },
+    // locale: { 
+    //     type: String, 
+    //     default: 'en-US' 
+    // },
     timezone: { 
         type: String, 
         default: 'UTC' 

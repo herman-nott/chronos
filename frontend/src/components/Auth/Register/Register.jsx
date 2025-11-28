@@ -13,7 +13,7 @@ function Register() {
   const [lastname, setLastname] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [country, setCountry] = useState('ua');
+  const [country, setCountry] = useState('UA');
   const [timeFormat, setTimeFormat] = useState('24'); 
 
   function onLoginChange(event) {
@@ -40,9 +40,6 @@ function Register() {
     setLastname(event.target.value);
   }
 
-  function onCountryChange(value) {
-  setCountry(value);
-}
   function onSubmitRegister() {
     setError('');
     // setIsLoading(true);
@@ -62,8 +59,6 @@ function Register() {
         password_confirmation: passwordConfirmation,
         firstname: firstname,
         lastname: lastname,
-        locale: country,
-
         country: country,
         time_format: timeFormat,
         timezone
@@ -95,9 +90,9 @@ function Register() {
           <div className="measure">
             <fieldset id="sign_up" className="ba b--transparent ph0 mh0">
               <legend className="f1 fw6 ph0 mh0">Register</legend>
-              < div className="flex-container">
+              <div className="flex-container">
                 <div className="flex-item">
-                  <div className="mt-3">
+                  <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="login">Login <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
                         className="pa2 input-reset ba b--black bg-transparent w-100" 
@@ -108,7 +103,7 @@ function Register() {
                         onChange={onLoginChange}
                     />
                   </div>
-                  <div className="mv-3">
+                  <div className="mv3">
                     <label className="db fw6 lh-copy f6" htmlFor="password">Password <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
                       className="b pa2 input-reset ba b--black bg-transparent w-100" 
@@ -119,7 +114,7 @@ function Register() {
                       onChange={onPasswordChange}
                     />
                   </div>
-                  <div className="mt-3">
+                  <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="first-name">First name</label>
                     <input 
                       className="pa2 input-reset ba b--black bg-transparent w-100" 
@@ -129,20 +124,18 @@ function Register() {
                       onChange={onFirstnameChange}
                     />
                   </div>
-                  <div className="mt-3">
-                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
-                    <input 
-                      className="pa2 input-reset ba b--black bg-transparent w-100"
-                      type="text" 
-                      name="last-name" 
-                      id="last-name" 
-                      onChange={onLastnameChange}
-                    />
+
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
+                    <select value={country} onChange={(e) => setCountry(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
+                      <option value="UA">Ukraine</option>
+                      <option value="DE">Germany</option>
+                    </select>
                   </div>
                 </div>
 
                 <div className="flex-item">
-                  <div className="mt-3">
+                  <div className="mt3">
                     <label className="db fw6 lh-copy f6" htmlFor="email-address">Email <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
                       className="pa2 input-reset ba b--black bg-transparent w-100" 
@@ -153,7 +146,7 @@ function Register() {
                       onChange={onEmailChange}
                     />
                   </div>
-                  <div className="mv-3">
+                  <div className="mv3">
                     <label className="db fw6 lh-copy f6" htmlFor="password-confirmation">Password Confirmation <span style={{color: '#ff0000ff'}}>*</span></label>
                     <input 
                       className="b pa2 input-reset ba b--black bg-transparent w-100" 
@@ -165,13 +158,15 @@ function Register() {
                     />
                   </div>
 
-                  <div className="mt-3">
-                    <label className="db fw6 lh-copy f6" htmlFor="Country">Country</label>
-                    <select value={country} onChange={e => onCountryChange(e.target.value)} className="pa2 input-reset ba b--black bg-transparent w-100">
-                      <option value="">Select a country</option>
-                      <option value="ua">Ukraine</option>
-                      <option value="de">Germany</option>
-                    </select>
+                  <div className="mt3">
+                    <label className="db fw6 lh-copy f6" htmlFor="last-name">Last name</label>
+                    <input 
+                      className="pa2 input-reset ba b--black bg-transparent w-100"
+                      type="text" 
+                      name="last-name" 
+                      id="last-name" 
+                      onChange={onLastnameChange}
+                    />
                   </div>
 
                   <div className="mt3">
@@ -213,7 +208,7 @@ function Register() {
       )}
 
       {error && (
-        <p className="message" style={{ color: 'red'}}> 
+        <p style={{ color: 'red', fontWeight: 'bold' }}> 
           &#10006; {error}
         </p>
       )}

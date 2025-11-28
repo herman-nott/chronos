@@ -9,7 +9,7 @@ import holidayFetch from "../holidays/hollidayFetch.js";
 
 async function handleRegister(req, res, bcrypt, nodemailer) {
 
-    const { login, password, password_confirmation, firstname, lastname, email, locale, time_format, timezone } = req.body;
+    const { login, password, password_confirmation, firstname, lastname, email, country, time_format, timezone } = req.body;
 
     try {
         if (password !== password_confirmation) {
@@ -49,7 +49,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             userToUpdate.full_name = `${firstname} ${lastname}`;
             userToUpdate.email = email;
             userToUpdate.updatedAt = new Date();
-            userToUpdate.locale = locale;
+            // userToUpdate.locale = locale;
 
             newUser = await userToUpdate.save();
         } else {
@@ -58,7 +58,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
                 password_hash: hash,
                 full_name: `${firstname} ${lastname}`,
                 email,
-                locale,
+                // locale: "en-US",
                 timezone: timezone || "UTC",
                 calendars: [],
                 is_email_confirmed: false,
@@ -86,10 +86,10 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
         });
 
         let year = new Date().getFullYear();
-        let holidays = await holidayFetch(newUser.locale, year);
+        let holidays = await holidayFetch(newUser.country, year);
         console.log('86 register hollidays:', holidays);
-        console.log('register 87:',year)
-        console.log(newUser.locale)
+        console.log('register 87:', year)
+        console.log(newUser.country)
 
         for (const holiday of holidays) {
             const eventData = {
