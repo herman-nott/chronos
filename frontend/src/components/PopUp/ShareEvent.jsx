@@ -11,10 +11,6 @@ export default function ShareEvent({ event, onClose, onShared }) {
   // Generate share link and load existing shares when component mounts
   useEffect(() => {
     if (!event || !event._id) return;
-
-    if (event.shared_with) {
-      setSharedUsers(event.shared_with);
-    }
     
     const generateShareLink = async () => {
       try {
