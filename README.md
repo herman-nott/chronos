@@ -2,7 +2,7 @@ chronos
 
 When in app root:
 
-cp .env.sample .env
+place the working .env
 
 npm install
 
