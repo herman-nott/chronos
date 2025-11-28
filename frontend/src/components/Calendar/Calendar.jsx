@@ -43,6 +43,23 @@ export default function Calendar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const q = query.toLowerCase();
+
+    const results = allEvents
+      .filter(e => e.title?.toLowerCase().includes(q))
+      .slice(0, 10);
+
+    setSearchResults(results);
+  };
+
   // const [userSettings, setUserSettings] = useState(null);
 
   // useEffect(() => {
@@ -357,7 +374,47 @@ export default function Calendar() {
                 <Button className="view-btn" text="Year" onClick={() => setSelectedView('Year')} />
                   
                 <div className="toolbar-right">
-                  <SearchView placeholder="Search" />
+                  <div style={{ position: "relative" }}>
+                    <SearchView
+                      placeholder="Search"
+                      value={searchQuery}
+                      onChange={(e) => handleSearch(e.target.value)}
+                    />
+
+                    {searchResults.length > 0 && (
+                      <div style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        right: 0,
+                        background: "white",
+                        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                        maxHeight: "200px",
+                        overflowY: "auto",
+                        zIndex: 999,
+                        borderRadius: "4px",
+                        padding: "0.5em"
+                      }}>
+                        {searchResults.map(ev => (
+                          <div
+                            key={ev._id}
+                            style={{
+                              padding: "0.4em 0.6em",
+                              cursor: "pointer",
+                              borderRadius: "4px"
+                            }}
+                            onClick={() => {
+                              setSelectedEvent(ev);
+                              setSearchResults([]);
+                              setSearchQuery(ev.title);
+                            }}
+                          >
+                            {ev.title}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
 
@@ -420,6 +477,19 @@ export default function Calendar() {
             }}
           />
         </Popup>
+      )}
+
+      {selectedEvent && (
+        <EventDetails
+          event={selectedEvent}
+          onClose={() => {
+            setShowEventDetails(false);
+            setSelectedEvent(null);
+          }}
+          onEdit={handleEditEvent}
+          onDelete={handleEventDeleted}
+          onShare={handleShareEvent}
+        />
       )}
 
       {/* Share Event Popup */}
