@@ -42,19 +42,14 @@ export default function SmallCalendar({ variant='default', year, month, onDaySel
     }
 
     // Next month’s starting days
-    for (let i = lastDayOfMonth; i < 6; i++) {
-      days.push({
-        day: i - lastDayOfMonth + 1,
-        className: "inactive"
-      });
-    }
-
-     while (days.length < 42) {
-    days.push({
-      day: days.length,
-      className: "inactive"
-    });
-  }
+     let rest = 42 - days.length;
+      for (let i = 1; i <= rest; i++) {
+        days.push({
+          day: i,
+          className: "inactive"
+        });
+      }
+    
   
     return days;
   }
