@@ -52,7 +52,8 @@ import handleGetAllUserEvents from "./controllers/event/getAllUserEvents.js"
 // ~~~ User ~~~
 import handleSearchUsers from "./controllers/user/searchUsers.js";
 import handleUpdateSettings from "./controllers/user/updateSettings.js";
-
+// ~~~ Holidays ~~~
+import populateHolidays from './controllers/holidays/populateHolidays.js'
 // middleware
 import requireAuth from "./middleware/requireAuth.js";
 import requireEmailConfirmed from "./middleware/requireEmailConfirmed.js";
@@ -104,6 +105,7 @@ async function start() {
     app.post('/api/events/:eventId/generate-share-link', requireAuth, (req, res) => { handleGenerateEventShareLink(req, res) });
     app.post('/api/calendars/:calendarId/share', requireAuth, (req, res) => { handleShareCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/generate-share-link', requireAuth, (req, res) => { handleGenerateShareLink(req, res) });
+    app.post('/api/calendars/calendarId/populate-holidays', requireAuth, (req, res) => { populateHolidays(req, res) });
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });
