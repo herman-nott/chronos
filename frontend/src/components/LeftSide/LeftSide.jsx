@@ -242,7 +242,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange }) =>
                         }}
                       />
                       {/* Only show menu for non-primary calendars */}
-                      {calendar._id !== myCalendars[0]?._id && (
+                      {calendar._id !== myCalendars[0]?._id && calendar._id !== myCalendars[1]?._id && (
                         <div style={{display: 'flex', position: 'relative'}}>
                           <i
                             className="fa-solid fa-ellipsis-vertical calendar-arrow pointer"
