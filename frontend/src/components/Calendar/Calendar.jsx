@@ -43,6 +43,8 @@ export default function Calendar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
+  const [user, setUser] = useState(null);
+
   const handleSearch = (query) => {
     setSearchQuery(query);
 
@@ -59,6 +61,29 @@ export default function Calendar() {
 
     setSearchResults(results);
   };
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const res = await fetch("http://localhost:3000/api/sessionUser", {
+          credentials: "include",
+        });
+
+        if (!res.ok) {
+          console.error("Not authenticated", res.status);
+          return;
+        }
+
+        const data = await res.json();
+        console.log("SESSION USER:", data.user);
+        setUser(data.user);
+      } catch (err) {
+        console.error("Failed to load session user", err);
+      }
+    };
+
+    loadUser();
+  }, []);
 
   const { settings } = useSettings();
 
@@ -90,29 +115,32 @@ export default function Calendar() {
     fetchCalendars();
   }, []);
 
-  //fill holidays
- useEffect(() => {
-  const fetchHolidays = async () => {
-    try {
-      const userId = sessionUser.id;
-      const calendarId = 2;
+  // fill holidays
+  useEffect(() => {
+    if (!user) return;
 
-      const res = await fetch(`/api/holidays/${calendarId}/${userId}/populate-holidays`, {
-        method: "POST",
-        credentials: "include",
-      });
+    // console.log(`http://localhost:3000/api/${user.id}/populate-holidays`);
+    
+    const fetchHolidays = async () => {
+      try {
+        const res = await fetch(`http://localhost:3000/api/${user?.id}/populate-holidays`, {
+          method: "GET",
+          credentials: "include",
+        });
 
-      if (!res.ok) throw new Error("Failed to populate holidays");
+        if (!res.ok) throw new Error("Failed to populate holidays");
 
-      console.log("Holidays populated");
+        console.log("Holidays populated");
       } catch (error) {
         console.error("Error populating holidays:", error);
         setError("Failed to load holidays. Please check your connection.");
       }
+
+      await fetchEvents();
     };
 
     fetchHolidays();
-  }, []);
+  }, [user]);
 
 
   // фетч ВСЁ

@@ -79,7 +79,7 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
         const holidayCalendar = await Calendar.create({
             owner: newUser._id,
             title: `holiday calendar`,
-            color: "#f321dbff",
+            color: "#018659",
             is_visible: true,
             members: [newUser._id]
         });

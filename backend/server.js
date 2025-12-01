@@ -90,6 +90,14 @@ async function start() {
     app.get('/api/calendars/shared/:shareToken', (req, res) => { handleGetSharedCalendar(req, res) });
     app.get('/api/auth/me', (req, res) => { handleMe(req, res) });
     app.get('/api/events', requireAuth, (req, res) => { handleGetAllUserEvents(req, res) });
+    app.get('/api/:userId/populate-holidays', requireAuth, (req, res) => { populateHolidays(req, res)});
+    app.get("/api/sessionUser", (req, res) => {
+        if (!req.session.user) {
+            return res.status(401).json({ user: null });
+        }
+
+        res.json({ user: req.session.user });
+    });
 
     // === POST Requests ===
     app.post('/api/auth/register', (req, res) => { handleRegister(req, res, bcrypt, nodemailer) });
@@ -106,7 +114,6 @@ async function start() {
     app.post('/api/events/:eventId/generate-share-link', requireAuth, (req, res) => { handleGenerateEventShareLink(req, res) });
     app.post('/api/calendars/:calendarId/share', requireAuth, (req, res) => { handleShareCalendar(req, res, nodemailer) });
     app.post('/api/calendars/:calendarId/generate-share-link', requireAuth, (req, res) => { handleGenerateShareLink(req, res) });
-    app.post('/api/calendars/:calendarId/:id/populate-holidays', requireAuth, (req, res) => { populateHolidays(req, res)});
 
     // === PATCH Requests ===
     app.patch('/api/calendars/:id', requireAuth, (req, res) => { handleUpdateCalendar(req, res) });

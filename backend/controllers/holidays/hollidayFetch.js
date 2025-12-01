@@ -4,7 +4,7 @@ export default async function holidayFetch (contry, year) {
   try {
     const response = await fetch(url);
     const data = await response.json();
-    console.log("holidayFetch response:", data);
+    // console.log("holidayFetch response:", data);
     return data?.response?.holidays || [];
   } catch (err) {
     console.error("holidayFetch error:", err);

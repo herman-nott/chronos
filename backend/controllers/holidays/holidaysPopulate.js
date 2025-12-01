@@ -1,46 +1,53 @@
-
- import holidayFetch from "./hollidayFetch.js";
+import holidayFetch from "./hollidayFetch.js";
 import User from "../../database/models/User.js";
-import Calendar from "../../database/models/Calendar.js";
 import Event from "../../database/models/Event.js";
 
 export default async function populateHolidays(req, res) {
   try {
-    const { calendarId, id } = req.params;
-    const user = await User.findById(id);
+    const { userId } = req.params;
 
-    if (!user) return res.status(404).json({ message: "User not found" });
+    // console.log(userId);
+    
+    const user = await User.findById(userId);
 
-    const holidayCalendar = calendarId;
+    if (!user)
+      return res.status(404).json({ message: "User not found" });
 
-    if (!holidayCalendar)
-      return res.status(404).json({ message: "Holiday calendar not found" });
+    // берём первый календарь пользователя
+    if (!user.calendars || user.calendars.length === 0)
+      return res.status(404).json({ message: "No calendars found for this user" });
 
-    // Fetch holidays
+    const calendarId = user.calendars[1]._id; 
     const year = new Date().getFullYear();
 
+    console.log(user.country);
+    console.log(year);
+
+    await Event.deleteMany({ calendar_id: calendarId, category: 'arrangement' });
+
+    // fetch holidays
     const holidays = await holidayFetch(user.country, year);
 
-    console.log("Holiday Fetch Response:", holidays);
+    if (!holidays.length)
+      return res.status(200).json({ message: "No holidays fetched" });
 
-    let  event = []; 
     for (const holiday of holidays) {
-      event = await Event.create({
-        calendar_id: holidayCalendar,
+      await Event.create({
+        calendar_id: calendarId,
         title: holiday.name,
         description: holiday.description || "Holiday",
-        category: 'arrengement',
+        category: 'arrangement',
         start_time: new Date(holiday.date.iso),
         end_time: new Date(holiday.date.iso),
         reminder_time: 15,
         is_all_day: true,
         reminders: [15],
-        participants: [user.email]
+        participants: [user.email],
+        color: '#018659'
       });
     }
 
     res.status(200).json({ message: "Holiday events created!" });
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });

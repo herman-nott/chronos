@@ -53,6 +53,25 @@ export default function Settings({ onClose }) {
 
       if (res.ok) {
         updateSettings({ country, timeFormat });
+
+        const meRes = await fetch("http://localhost:3000/api/sessionUser", { credentials: "include" });
+        if (meRes.ok) {
+          const user = await meRes.json();
+
+          if (user && user.id) {
+            const holidaysRes = await fetch(`http://localhost:3000/api/${user.id}/populate-holidays`, {
+              method: "GET",
+              credentials: "include",
+            });
+
+            if (!holidaysRes.ok) {
+              console.error("Failed to populate holidays after changing country");
+            } else {
+              console.log("Holidays updated for new country");
+            }
+          }
+        }
+
         onClose();
       } else {
         console.error("Failed to update settings");
