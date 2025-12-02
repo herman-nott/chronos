@@ -207,7 +207,7 @@ export default function NewEvent({
       </div>
 
       <div className="popup-row">
-        <label>Category</label>
+        <label>Category </label>
         <select value={category} onChange={e => setCategory(e.target.value)}>
           <option value="arrangement">Arrangement</option>
           <option value="reminder">Reminder</option>
@@ -254,6 +254,7 @@ export default function NewEvent({
           </div>
 
           <div className="popup-row checkbox-row">
+            <span>All day</span>
             <input
               type="checkbox"
               checked={allDay}
@@ -264,7 +265,6 @@ export default function NewEvent({
                 }
               }}
             />
-            <span>All day</span>
           </div>
 
           {!allDay && (
@@ -284,6 +284,7 @@ export default function NewEvent({
           <div className="popup-row">
             <input
               type="text"
+              className="input-title"
               placeholder="Location"
               value={location}
               onChange={e => setLocation(e.target.value)}
@@ -293,6 +294,7 @@ export default function NewEvent({
           <div className="popup-row">
             <input
               type="text"
+              className="input-title"
               placeholder="Participants (emails, comma separated)"
               value={participants}
               onChange={e => setParticipants(e.target.value)}
@@ -321,6 +323,7 @@ export default function NewEvent({
 
       <div className="popup-row">
         <textarea
+          className="input-title"
           placeholder="Description"
           value={description}
           onChange={e => setDescription(e.target.value)}
