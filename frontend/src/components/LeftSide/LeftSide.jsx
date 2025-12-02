@@ -170,7 +170,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, onto
       <div className="left-side-container">
         <div className='logo'>
           <img src="../src/assets/images/logo.svg" alt='logo' className='logo-pick white'></img>
-          <h1>Calendar</h1>
+          <h1 id="logo">Calendar</h1>
         </div>
 
         <div className="header mt-5">
@@ -178,7 +178,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, onto
           <button className="menu-item mr-4" 
              onClick={ontoggleCreateEvent}>
             <span className="menu-text gap-1">Create event </span>
-            <i className="fa-solid fa-chevron-right white"></i>
+            <i className="fa-solid fa-chevron-right white" id="button-chevron"></i>
           </button>
 
           <PopupController
@@ -209,7 +209,7 @@ const LeftSide = ({ onDataCreated, onDaySelect, onCalendarVisibilityChange, onto
 
         <div className="menu-item gap-2" onClick={(e) => openPopup("calendar", e)}> 
           <span className="menu-text mr-2">Add Calendar</span>
-          <i className="fa-solid fa-plus transition-transform white menu-text"></i>
+          <i className="fa-solid fa-plus transition-transform white menu-text" id="button-puls"></i>
         </div>
 
         {!collapsed && (

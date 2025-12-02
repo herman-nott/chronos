@@ -108,3 +108,21 @@ span{
     /* overflow-wrap: break-word; */
   }
 }
+
+@media (max-width: 440px) {
+  .calendar-content {
+    overflow: scroll;
+  }
+  .calendar-toolbar {
+    overflow: scroll;
+  }
+  .big-calendar {
+    overflow: scroll;
+  }
+  .view-btn {
+    font-size: 16px;
+    padding: 5px 14px;
+    width: 2em;
+    min-width: max-content;
+  }
+}
