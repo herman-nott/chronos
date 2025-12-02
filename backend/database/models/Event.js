@@ -106,9 +106,14 @@ const EventSchema = new mongoose.Schema(
         default: Date.now 
       }
     }],
-
     color: { 
         type: String
+    },
+    is_system_holiday: { 
+        type: Boolean
+    },
+    is_readonly: { 
+        type: Boolean
     },
   },
   { timestamps: true }

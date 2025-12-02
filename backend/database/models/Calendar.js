@@ -57,6 +57,13 @@ const CalendarSchema = new mongoose.Schema({
             }
         },
     ],
+    
+    is_system_holiday: { 
+        type: Boolean
+    },
+    is_readonly: { 
+        type: Boolean
+    },
 },
 { timestamps: true });
 

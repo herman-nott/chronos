@@ -39,9 +39,13 @@ export default function NewEvent({
 
   useEffect(() => {
     if (propCalendarId) {
-      setCalendarId(propCalendarId);
+      // Validate that the provided calendar ID is not a holiday/readonly calendar
+      const calendar = [...myCalendars, ...otherCalendars].find(c => c._id === propCalendarId);
+      if (calendar && !calendar.is_holiday_calendar && !calendar.is_readonly) {
+        setCalendarId(propCalendarId);
+      }
     }
-  }, [propCalendarId]);
+  }, [propCalendarId, myCalendars, otherCalendars]);
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/calendars`, {
@@ -54,12 +58,15 @@ export default function NewEvent({
         
         // Set initial calendar and color
         if (!calendarId && data.myCalendars?.length > 0) {
-          const firstCalendar = data.myCalendars[0];
-          setCalendarId(firstCalendar._id);
+          const firstEditableCalendar = data.myCalendars.find(
+            c => !c.is_holiday_calendar && !c.is_readonly
+          );
+          
+          setCalendarId(firstEditableCalendar._id);
           
           // Only set initial color if not manually changed and not already set
           if (!hasManuallySetColor && !initialColorSet) {
-            setEventColor(firstCalendar.color || "#4285F4");
+            setEventColor(firstEditableCalendar.color || "#4285F4");
             setInitialColorSet(true);
           }
         }
@@ -92,6 +99,11 @@ export default function NewEvent({
   async function handleSubmit() {
     if (!title) return alert("Title is required");
     if (!calendarId) return alert("Choose a calendar");
+
+    const selectedCalendar = [...myCalendars, ...otherCalendars].find(c => c._id === calendarId);
+    if (selectedCalendar && (selectedCalendar.is_holiday_calendar || selectedCalendar.is_readonly)) {
+      return alert("Cannot create events in this calendar");
+    }
 
     let eventData = { 
       title, 
@@ -165,10 +177,22 @@ export default function NewEvent({
       <select value={calendarId} onChange={e => handleCalendarChange(e.target.value)}>
         <option value="">Select a calendar</option>
         <optgroup label="My calendars">
-          {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+          {myCalendars
+            .filter(c => !c.is_holiday_calendar && !c.is_readonly)
+            .map(c => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))}
         </optgroup>
         <optgroup label="Shared with me">
-          {otherCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+          {otherCalendars
+            .filter(c => !c.is_holiday_calendar && !c.is_readonly)
+            .map(c => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))}
         </optgroup>
       </select>
 

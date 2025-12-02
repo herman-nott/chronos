@@ -10,12 +10,14 @@ export default async function populateHolidays(req, res) {
     
     const user = await User.findById(userId);
 
-    if (!user)
+    if (!user) {
       return res.status(404).json({ message: "User not found" });
+    }
 
     // берём первый календарь пользователя
-    if (!user.calendars || user.calendars.length === 0)
+    if (!user.calendars || user.calendars.length === 0) {
       return res.status(404).json({ message: "No calendars found for this user" });
+    }
 
     const calendarId = user.calendars[1]._id; 
     const year = new Date().getFullYear();
@@ -23,7 +25,11 @@ export default async function populateHolidays(req, res) {
     console.log(user.country);
     console.log(year);
 
-    await Event.deleteMany({ calendar_id: calendarId, category: 'arrangement' });
+    await Event.deleteMany({ 
+      calendar_id: calendarId, 
+      category: 'arrangement', 
+      is_system_holiday: true 
+    });
 
     // fetch holidays
     const holidays = await holidayFetch(user.country, year);
@@ -32,18 +38,26 @@ export default async function populateHolidays(req, res) {
       return res.status(200).json({ message: "No holidays fetched" });
 
     for (const holiday of holidays) {
+      const baseDate_start = new Date(holiday.date.iso);
+      const baseDate_end = new Date(holiday.date.iso);
+
+      baseDate_start.setHours(0,0);
+      baseDate_end.setHours(0,30);
+
       await Event.create({
         calendar_id: calendarId,
         title: holiday.name,
         description: holiday.description || "Holiday",
         category: 'arrangement',
-        start_time: new Date(holiday.date.iso),
-        end_time: new Date(holiday.date.iso),
+        start_time: baseDate_start,
+        end_time: baseDate_end,
         reminder_time: 15,
         is_all_day: true,
         reminders: [15],
         participants: [user.email],
-        color: '#018659'
+        color: '#018659',
+        is_system_holiday: true,
+        is_readonly: true
       });
     }
 
