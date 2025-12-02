@@ -56,13 +56,13 @@ export default function NewEvent({
         if (!calendarId && data.myCalendars?.length > 0) {
           const firstEditableCalendar = data.myCalendars.find(
             c => !c.is_holiday_calendar && !c.is_readonly
-          ) || data.myCalendars[0];
+          );
           
           setCalendarId(firstEditableCalendar._id);
           
           // Only set initial color if not manually changed and not already set
           if (!hasManuallySetColor && !initialColorSet) {
-            setEventColor(firstCalendar.color || "#4285F4");
+            setEventColor(firstEditableCalendar.color || "#4285F4");
             setInitialColorSet(true);
           }
         }
@@ -173,22 +173,22 @@ export default function NewEvent({
       <select value={calendarId} onChange={e => handleCalendarChange(e.target.value)}>
         <option value="">Select a calendar</option>
         <optgroup label="My calendars">
-          {myCalendars.map(c => <option 
-              key={c._id} 
-              value={c._id}
-              disabled={c.is_holiday_calendar || c.is_readonly}
-            >
-              {c.title}{(c.is_holiday_calendar || c.is_readonly) ? ' (Read-only)' : ''}
-            </option>)}
+          {myCalendars
+            .filter(c => !c.is_holiday_calendar && !c.is_readonly)
+            .map(c => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))}
         </optgroup>
         <optgroup label="Shared with me">
-          {otherCalendars.map(c => <option 
-              key={c._id} 
-              value={c._id}
-              disabled={c.is_holiday_calendar || c.is_readonly}
-            >
-              {c.title}{(c.is_holiday_calendar || c.is_readonly) ? ' (Read-only)' : ''}
-            </option>)}
+          {otherCalendars
+            .filter(c => !c.is_holiday_calendar && !c.is_readonly)
+            .map(c => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))}
         </optgroup>
       </select>
 
