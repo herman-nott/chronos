@@ -90,7 +90,8 @@
   padding: 0;
 }
 
-/* Stacking multiple events in same slot */
+/* REMOVED - These fixed positions conflict with dynamic overlap layout */
+/* Stacking multiple events in same slot
 .calendar-cell .event-block:nth-child(1) {
   top: 2px;
 }
@@ -101,7 +102,7 @@
 
 .calendar-cell .event-block:nth-child(3) {
   top: 74px;
-}
+}*/
 
 .event-block {
   position: absolute;

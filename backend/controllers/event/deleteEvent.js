@@ -11,6 +11,12 @@ async function handleDeleteEvent(req, res) {
             return res.status(404).json({ error: "Event not found" });
         }
 
+        if (event.is_system_holiday || event.is_readonly) {
+            return res.status(403).json({ 
+                error: "Cannot delete system holiday events" 
+            });
+        }
+
         const canEdit = await checkEventPermission(
             id, 
             req.session.user.id, 

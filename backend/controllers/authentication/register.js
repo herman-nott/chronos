@@ -81,7 +81,9 @@ async function handleRegister(req, res, bcrypt, nodemailer) {
             title: `holiday calendar`,
             color: "#018659",
             is_visible: true,
-            members: [newUser._id]
+            members: [newUser._id],
+            is_system_holiday: true,
+            is_readonly: true
         });
 
        

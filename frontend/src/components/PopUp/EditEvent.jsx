@@ -8,6 +8,7 @@ const presetColors = [
 ];
 
 export default function EditEvent({ event, onClose, onEventUpdated }) {
+  const isHolidayEvent = event.is_system_holiday || event.is_readonly;
   const [title, setTitle] = useState(event.title || "");
   const [category, setCategory] = useState(event.category || "arrangement");
   const [eventColor, setEventColor] = useState(event.color || "#4285F4");
@@ -40,6 +41,11 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async () => {
+    if (isHolidayEvent) {
+      alert("Holiday events cannot be edited");
+      return;
+    }
+
     if (!title.trim()) {
       return alert("Title is required");
     }

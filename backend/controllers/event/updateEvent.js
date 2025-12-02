@@ -14,6 +14,12 @@ async function handleUpdateEvent(req, res) {
             return res.status(404).json({ error: "Event not found" });
         }
 
+        if (event.is_system_holiday || event.is_readonly) {
+            return res.status(403).json({ 
+                error: "Cannot edit system holiday events" 
+            });
+        }
+
         // Check event-level permissions (includes calendar AND event sharing)
         const canEdit = await checkEventPermission(
             id, 

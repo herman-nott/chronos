@@ -50,7 +50,8 @@ function VerifyEmail() {
         event.preventDefault();
         const code = otp.join("");
 
-        fetch(`${import.meta.env.VITE_API_URL}/api/auth/register/verify-email`, {
+        //fetch(`${import.meta.env.VITE_API_URL}/api/auth/register/verify-email`, {
+        fetch(`http://localhost:3000/api/auth/register/verify-email`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             credentials: 'include',

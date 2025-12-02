@@ -3,6 +3,75 @@ import Popup from '../PopUp/PopUp';
 import NewEvent from '../PopUp/NewEvent';
 import CurrentTimeLine from '../CurrentTimeLine/CurrentTimeLine';
 
+// layout calc func
+function calculateEventLayout(events) {
+  if (!events || events.length === 0) return [];
+
+  const sortedEvents = [...events].sort((a, b) => {
+    const aStart = new Date(a.start_time || a.due_date || a.reminder_time);
+    const bStart = new Date(b.start_time || b.due_date || b.reminder_time);
+    
+    if (aStart.getTime() !== bStart.getTime()) {
+      return aStart - bStart;
+    }
+    
+    const aDuration = a.end_time ? 
+      new Date(a.end_time) - aStart : 60 * 60 * 1000;
+    const bDuration = b.end_time ? 
+      new Date(b.end_time) - bStart : 60 * 60 * 1000;
+    
+    return bDuration - aDuration;
+  });
+
+  const eventLayouts = sortedEvents.map(event => ({
+    event,
+    column: 0,
+    totalColumns: 1
+  }));
+
+  for (let i = 0; i < eventLayouts.length; i++) {
+    const currentLayout = eventLayouts[i];
+    const currentEvent = currentLayout.event;
+    const currentStart = new Date(currentEvent.start_time || currentEvent.due_date || currentEvent.reminder_time);
+    const currentEnd = currentEvent.end_time ? 
+      new Date(currentEvent.end_time) : 
+      new Date(currentStart.getTime() + 60 * 60 * 1000);
+
+    const overlappingLayouts = [];
+    for (let j = 0; j < i; j++) {
+      const prevLayout = eventLayouts[j];
+      const prevEvent = prevLayout.event;
+      const prevStart = new Date(prevEvent.start_time || prevEvent.due_date || prevEvent.reminder_time);
+      const prevEnd = prevEvent.end_time ? 
+        new Date(prevEvent.end_time) : 
+        new Date(prevStart.getTime() + 60 * 60 * 1000);
+
+      if (currentStart < prevEnd && currentEnd > prevStart) {
+        overlappingLayouts.push(prevLayout);
+      }
+    }
+
+    if (overlappingLayouts.length > 0) {
+      const usedColumns = overlappingLayouts.map(l => l.column);
+      let column = 0;
+      while (usedColumns.includes(column)) {
+        column++;
+      }
+      currentLayout.column = column;
+
+      const maxColumn = Math.max(column, ...usedColumns);
+      const totalColumns = maxColumn + 1;
+      
+      currentLayout.totalColumns = totalColumns;
+      overlappingLayouts.forEach(layout => {
+        layout.totalColumns = Math.max(layout.totalColumns, totalColumns);
+      });
+    }
+  }
+
+  return eventLayouts;
+}
+
 export default function DayView({ 
   onDateChange, 
   currentDate, 
@@ -168,7 +237,10 @@ export default function DayView({
     for (let dayIndex = 0; dayIndex < days; dayIndex++) {
       const cellKey = `${timeSlot}-${dayIndex}`;
       const isSelected = selectedCells.has(cellKey);
-      const cellItems = getItemsForTimeSlot(timeSlot);
+      const cellItems = getItemsForTimeSlot(timeSlot, dayIndex);
+      
+      // Calculate layout for overlapping events
+      const eventLayouts = calculateEventLayout(cellItems);
 
       blocks.push(
         <div
@@ -176,7 +248,7 @@ export default function DayView({
           className={`calendar-cell ${isSelected ? 'selected' : ''}`}
           onClick={(e) => openPopup("event", e)}
         >
-          {cellItems.map((event, index) => {
+          {eventLayouts.map(({ event, column, totalColumns }, index) => {
             const topPosition = calculateEventPosition(event);
             const height = calculateEventDuration(event);
             const isPast = isEventPast(event);
@@ -189,7 +261,11 @@ export default function DayView({
             const calendarColor = getCalendarColor(event.calendarId);
             const rgb = hexToRgb(eventColor);
             const bgColor = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.75)`;
-            const textColor = "white"; // can't decide
+            const textColor = "white";
+            
+            // Calculate width and position based on columns
+            const widthPercent = 100 / totalColumns;
+            const leftPercent = column * widthPercent;
             
             return (
               <div
@@ -200,9 +276,15 @@ export default function DayView({
                   borderLeftColor: calendarColor,
                   top: `${topPosition}px`,
                   height: `${eventHeight}px`,
+                  left: `${leftPercent}%`,
+                  width: `calc(${widthPercent}% - 8px)`,
+                  right: 'auto',
                   zIndex: 10 + index
                 }}
-                onClick={(e) => handleItemClick(event, e)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEventClick?.(event, e);
+                }}
                 title={`${event.title}\n${event.description || ''}`}
               >
                 {showFullDetails ? (

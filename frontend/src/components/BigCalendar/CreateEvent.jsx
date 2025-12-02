@@ -4,15 +4,17 @@ import "./CreateEvent.css";
 const presetColors = [
   "#4285F4", "#DB4437", "#F4B400", "#0F9D58",
   "#AB47BC", "#00ACC1", "#FF7043", "#9E9D24",
-  "#43dcffff", "#4e4fb1ff", "#E91E63", "#9C27B0"
+  "#795548", "#607D8B", "#E91E63", "#9C27B0"
 ];
 
 export default function CreateEventView({ 
   onClose, 
   onCreate,
   onEventCreated,
+  onDataCreated,
   defaultCategory = "arrangement",
-  calendarId: propCalendarId
+  calendarId: propCalendarId,
+  setSelectedView
 }) {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("arrangement");
@@ -39,9 +41,15 @@ export default function CreateEventView({
 
   useEffect(() => {
     if (propCalendarId) {
-      setCalendarId(propCalendarId);
+      const calendar = [...myCalendars, ...otherCalendars]
+        .find(c => c._id === propCalendarId);
+
+      if (calendar && !calendar.is_holiday_calendar && !calendar.is_readonly) {
+        setCalendarId(propCalendarId);
+      }
     }
-  }, [propCalendarId]);
+  }, [propCalendarId, myCalendars, otherCalendars]);
+
 
   useEffect(() => {
     fetch(`http://localhost:3000/api/calendars`, {
@@ -93,6 +101,11 @@ export default function CreateEventView({
     if (!title) return alert("Title is required");
     if (!calendarId) return alert("Choose a calendar");
 
+    const selectedCalendar = [...myCalendars, ...otherCalendars].find(c => c._id === calendarId);
+    if (selectedCalendar?.is_holiday_calendar || selectedCalendar?.is_readonly) {
+      return alert("Cannot create events in this calendar");
+    }
+
     let eventData = { 
       title, 
       description, 
@@ -141,8 +154,13 @@ export default function CreateEventView({
       
       if (onCreate) onCreate(saved);
       if (onEventCreated) onEventCreated(saved);
+      if (onDataCreated) onDataCreated('event', saved);
       
-      onClose();
+      if (setSelectedView) {
+        setSelectedView('Week');
+      } else if (onClose) {
+        onClose();
+      }
 
     } catch (err) {
       console.error("Event create error:", err);
@@ -165,10 +183,24 @@ export default function CreateEventView({
       <select className="selection" value={calendarId} onChange={e => handleCalendarChange(e.target.value)}>
         <option value="">Select a calendar</option>
         <optgroup label="My calendars">
-          {myCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+          {myCalendars
+            .filter(c => !c.is_holiday_calendar && !c.is_readonly)
+            .map(c => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))
+          }
         </optgroup>
         <optgroup label="Shared with me">
-          {otherCalendars.map(c => <option key={c._id} value={c._id}>{c.title}</option>)}
+          {otherCalendars
+            .filter(c => !c.is_holiday_calendar && !c.is_readonly)
+            .map(c => (
+              <option key={c._id} value={c._id}>
+                {c.title}
+              </option>
+            ))
+          }
         </optgroup>
       </select>
 
