@@ -47,8 +47,8 @@ function Register() {
 
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    // fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
-    fetch(`http://localhost:3000/api/auth/register`, {
+    // fetch(`http://localhost:3000/api/auth/register`, {
+	fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       credentials: 'include',
