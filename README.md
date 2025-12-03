@@ -1,11 +1,8 @@
-chronos
+### chronos
 
-When in app root:
+## Setup (app root):
 
-place the working .env
-
-npm install
-
-npm run dev
-
-Follow the frontend link.
+1. Clone the repository
+2. Copy `.env.example` to `.env`
+3. Fill in your actual credentials in `.env`
+4. Run `docker-compose up --build`
