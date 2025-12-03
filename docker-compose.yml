@@ -21,6 +21,12 @@ services:
     environment:
       - MONGODB_URI=mongodb://mongo:27017/chronos
       - SESSION_SECRET=${SESSION_SECRET}
+      - SMTP_HOST=${SMTP_HOST}
+      - SMTP_PORT=${SMTP_PORT}
+      - SMTP_SECURE=${SMTP_SECURE}
+      - SMTP_USER=${SMTP_USER}
+      - SMTP_PASS=${SMTP_PASS}
+      - FROM_EMAIL=${FROM_EMAIL}
       - NODE_ENV=development
     depends_on:
       - mongo
