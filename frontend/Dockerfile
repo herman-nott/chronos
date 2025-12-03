@@ -6,7 +6,6 @@ COPY package*.json ./
 
 RUN npm install
 
-# Application code
 COPY . .
 
 EXPOSE 5173

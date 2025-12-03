@@ -6,11 +6,9 @@ COPY package*.json ./
 
 RUN npm install
 
-# Application code
 COPY . .
 
 EXPOSE 3000
 
-# CMD ["npm", "start"]
-RUN npm install -g nodemon
+# RUN npm install -g nodemon
 CMD ["nodemon", "server.js"]
