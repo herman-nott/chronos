@@ -7,6 +7,16 @@ const presetColors = [
   "#795548", "#607D8B", "#E91E63", "#9C27B0"
 ];
 
+function formatDatetimeLocal(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  const hours = String(date.getHours()).padStart(2, '0');
+  const minutes = String(date.getMinutes()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}T${hours}:${minutes}`;
+}
+
 export default function EditEvent({ event, onClose, onEventUpdated }) {
   const isHolidayEvent = event.is_system_holiday || event.is_readonly;
   const [title, setTitle] = useState(event.title || "");
@@ -15,10 +25,10 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
   
   // arrangement fields
   const [startTime, setStartTime] = useState(
-    event.start_time ? new Date(event.start_time).toISOString().slice(0, 16) : ""
+    event.start_time ? formatDatetimeLocal(new Date(event.start_time)) : ""
   );
   const [endTime, setEndTime] = useState(
-    event.end_time ? new Date(event.end_time).toISOString().slice(0, 16) : ""
+    event.end_time ? formatDatetimeLocal(new Date(event.end_time)) : ""
   );
   const [location, setLocation] = useState(event.location || "");
   const [participants, setParticipants] = useState(
@@ -27,12 +37,12 @@ export default function EditEvent({ event, onClose, onEventUpdated }) {
 
   // reminder fields
   const [reminderTime, setReminderTime] = useState(
-    event.reminder_time ? new Date(event.reminder_time).toISOString().slice(0, 16) : ""
+    event.reminder_time ? formatDatetimeLocal(new Date(event.reminder_time)) : ""
   );
 
   // task fields
   const [dueDate, setDueDate] = useState(
-    event.due_date ? new Date(event.due_date).toISOString().slice(0, 16) : ""
+    event.due_date ? formatDatetimeLocal(new Date(event.due_date)) : ""
   );
   const [isCompleted, setIsCompleted] = useState(event.is_completed || false);
 
