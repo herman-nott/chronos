@@ -1,4 +1,4 @@
-# CHRONOS
+# CHRONOS APP
 
 1. [Short Description](#short-description)
 2. [Current Status and Progress per CBL Stages](#current-status-and-progress-per-cbl-stages)
@@ -15,7 +15,7 @@
 
 ## Short Description
 
-CHRONOS is a full-stack event calendar application built with **React.js (frontend)** and **Node.js (backend)** that provides comprehensive event management capabilities.  
+**CHRONOS** is a full-stack event calendar application built with **React.js (frontend)** and **Node.js (backend)** that provides comprehensive event management capabilities.  
 It includes user authentication, calendar creation and management, event scheduling with multiple categories, collaborative features, and automated notifications.
 
 **Key features:**

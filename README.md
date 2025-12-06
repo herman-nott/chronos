@@ -1,7 +1,7 @@
-# CHRONOS Project
+# CHRONOS APP
 
 ## Description:
-**Chronos** is a comprehensive **full-stack event calendar application** designed to streamline event management, improve time organization, and enhance team collaboration.  
+**CHRONOS** is a comprehensive **full-stack event calendar application** designed to streamline event management, improve time organization, and enhance team collaboration.  
 Built with **React.js** (frontend) and **Node.js** (backend), it provides a dynamic and responsive platform for creating, managing, and searching events with ease.
 
 Users can:
