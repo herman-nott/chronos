@@ -166,9 +166,9 @@ The interface includes:
    - Start all services simultaneously
 
 4. **Access the application**
-   - **Frontend:** http://localhost:5173
-   - **Backend API:** http://localhost:3000
-   - **MongoDB:** localhost:27017
+   ```bash
+   http://localhost:5173
+   ```
 
 ### Manual Setup
 
