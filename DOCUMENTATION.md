@@ -403,7 +403,7 @@ chronos/
 
 1. **Clone the repository**
    ```bash
-   git clone ssh://git@git.green-lms.app:22022/challenge-372/hpohosian-6505.git
+   git clone git@git.green-lms.app:22022/challenge-372/hpohosian-6505.git
    cd hpohosian-6505
    ```
    
